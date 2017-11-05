@@ -1,0 +1,2 @@
+Musí se vymyslet jak budeme řešit typy karet, myšleno Human Knight, Goblin Warrior, Elf warrior ally, Kor, Spirit, Human, etc
+Jestli to udělat přes pole výčtů Enum[], nebo přes pole řetězců String[].
