@@ -8,6 +8,7 @@ import cz.mtg.game.CardPlacement;
 
 import cz.mtg.game.Counter;
 import cz.mtg.game.CounterType;
+import cz.mtg.game.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 public abstract class AbstractCard implements CardInterface {
 
     private String name;
+    private final Player owner;
+    private Player controller;
     private boolean tapped;
     private boolean flipped;
     private HashMap<CounterType, Counter> counters;
@@ -34,12 +37,22 @@ public abstract class AbstractCard implements CardInterface {
      * Now your card has a name, yay!
      * @param name Name for the newly constructed card
      */
-    public AbstractCard(String name) {
+    public AbstractCard(String name, Player owner) {
         this.name = name;
+        this.owner = owner;
+        this.controller = owner;
     }
 
     public String getName() {
         return name;
+    }
+
+    public Player getController() {
+        return controller;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
     public boolean isTapped() {
@@ -143,9 +156,10 @@ public abstract class AbstractCard implements CardInterface {
     /**
      * This method is used in the toString() methods of AbstractCard subclasses to reduce redundancy
      * it appends state info about card state to a given StringBuilder
-     * @param sb
+     * @param sb given StruingBuilder
      */
     protected void appendStateInfo(StringBuilder sb) {
+        sb.append(", ").append(counters);
         if(isTapped()) {
             sb.append(", tapped");
         } else {

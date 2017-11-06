@@ -14,11 +14,6 @@ public class Player implements AttackableTarget {
     private boolean priority;
 
     @Override
-    public void applyDamage() {
-
-    }
-
-    @Override
     public void defaultTakeDamage(int damage) {
 
     }

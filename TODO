@@ -3,6 +3,9 @@ Abychom nebyli podepsaní pod každou třídou našim pravým jménem :D
 
 Hlavně při psaní myslet na to, že to musí být hratelné ve více hráčích
 
+Pokud nevíš kde začít, zkus začít implementovat java.io.Serializable tak aby každá se každá instance dala uložit jako soubor :)
+Během toho snad porozumíš struktuře projektu a spoustu věcí sám upravíš.
+
 Musí se vymyslet jak budeme řešit typy karet, myšleno Human Knight, Goblin Warrior, Elf warrior ally, Kor, Spirit, Human, etc
 Jestli to udělat přes pole výčtů Enum[], nebo přes pole řetězců String[],
 interface pro každý typ není možný, protože by to nešlo upravovat během hry.
@@ -21,6 +24,10 @@ měla by metodu resolve, která by provedla efekt schopnosti --> umístila by je
 Statické schopnosti typu Haste, Vigilance apod lze implementovat jako rozhraní
 
 Pořádně implementovat NegativeNotAllowedException
+
+Pořádně si rozmyslet, jak implementovat třídu Counter, jestli pro každý typ counteru přidat výčet do CounterType, nebo jen rozdělit
+countery na +1/+1 counter, -1/-1 counter a pojmenované countery, které by si nesly atribut Name jako String...
+Zvážit co je výhodnější, zatím tam je výčet ale to se dá upravit
 
 KLÍČOVÝ BOD:
 Vymyslet jakým způsobem se bude přidělovat hráčům priorita, tak aby pokaždé, když něco přijde na stack, každů hráč se mohl ohradit

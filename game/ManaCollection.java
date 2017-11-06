@@ -13,6 +13,7 @@ import java.util.Set;
  *  TODO
  *      Concept of this class is really only a prototype and should be discussed
  *      and eventually REWORKED
+ *      Consider using HASHMAP!!!!
  */
 public class ManaCollection {
     private final int[] pool = new int[Color.cachedValues().length];

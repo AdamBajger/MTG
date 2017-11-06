@@ -4,6 +4,7 @@ import cz.mtg.cards.AbstractCard;
 import cz.mtg.game.CardPlacement;
 import cz.mtg.game.Color;
 import cz.mtg.game.ManaCollection;
+import cz.mtg.game.Player;
 
 import java.util.Set;
 
@@ -22,8 +23,8 @@ public abstract class CastableCard extends AbstractCard implements CastableCardI
      * Creates a named card with given manacost
      * @param name desired name
      */
-    public CastableCard(String name, ManaCollection manaCost) {
-        super(name);
+    public CastableCard(String name, Player owner, ManaCollection manaCost) {
+        super(name, owner);
         this.manaCost = manaCost;
     }
 
@@ -42,9 +43,19 @@ public abstract class CastableCard extends AbstractCard implements CastableCardI
         super.setCardPlacement(CardPlacement.STACK);
     }
 
+    /**
+     * Appends information about mana cost of this card to given string builder
+     * @param sb given StringBuilder
+     */
+    protected void appendManaCostInfo(StringBuilder sb) {
+        sb.append(", ").append(manaCost);
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("CastableCard{" + super.getName() + ", " + manaCost);
+        StringBuilder sb = new StringBuilder();
+        appendBasicInfo(sb);
+        appendManaCostInfo(sb);
         appendStateInfo(sb);
 
         return sb.toString();

@@ -17,7 +17,7 @@ import cz.mtg.cards.CardInterface;
  * It is mostly abstract and serves only as a helper for recognizing what can be damaged and what not
  *
  */
-public interface DamageableTarget extends CardInterface {
+public interface DamageableTarget {
     /**
      * This is the default casual method to take damage
      * Every damageable target must implement such method

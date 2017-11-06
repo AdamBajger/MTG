@@ -35,6 +35,20 @@ public interface Creature extends CastableCardInterface, DamageableTarget {
     };
 
     /**
+     * Complex getter to get actual power of a creature
+     * calculates with default power and bonus power
+     * @return Actual power of the creature
+     */
+    int getPower();
+
+    /**
+     * Complex getter to get actual toughness of a creature
+     * calculates with default toughness and bonus toughness
+     * @return Toughness of a creature
+     */
+    int getToughness();
+
+    /**
      * Trie to add creature to attacking creature group
      * not developed yet...
      *
@@ -63,16 +77,19 @@ public interface Creature extends CastableCardInterface, DamageableTarget {
     /**
      * Default method to deal damage
      * This method actually deals damage to a TARGET from this
-     *
+     * @param damageableTarget Target to be damaged
      */
-    void defaultDealDamage(DamageableTarget damageableTarget, int damageAmount) throws NegativeNotAllowedException;
+    void defaultDealDamage(DamageableTarget damageableTarget) throws NegativeNotAllowedException;
+
+
+
 
     /**
      * Overridable method for dealing the damage to a target
      * @param damageableTarget target to be dealt damage
      */
-    default void dealDamage(DamageableTarget damageableTarget, int damageAmount) throws NegativeNotAllowedException {
-        defaultDealDamage(damageableTarget, damageAmount);
+    default void dealDamage(DamageableTarget damageableTarget) throws NegativeNotAllowedException {
+        defaultDealDamage(damageableTarget);
     }
 
 }

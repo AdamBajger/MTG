@@ -6,6 +6,7 @@ import cz.mtg.exceptions.NegativeNotAllowedException;
 import cz.mtg.exceptions.RestrictedCounterAmountException;
 import cz.mtg.game.Color;
 import cz.mtg.game.CounterType;
+import cz.mtg.game.Player;
 
 import java.util.Set;
 
@@ -38,8 +39,23 @@ import java.util.Set;
  *      defaultDestroy HTV
  */
 public interface CardInterface {
-
+    /**
+     * Returns the name of this card
+     * @return card name
+     */
     String getName();
+
+    /**
+     * Returns who controls this card at the very moment
+     * @return Controlling player
+     */
+    Player getController();
+
+    /**
+     * Returns Player who owns this card
+     * @return owning player
+     */
+    Player getOwner();
 
     /**
      * Casual default method to return set of colors this card inherits
