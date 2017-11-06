@@ -1,0 +1,29 @@
+Vyber si přezdívku, pod kterou budeš tvořit třídy :D
+Abychom nebyli podepsaní pod každou třídou našim pravým jménem :D
+
+Hlavně při psaní myslet na to, že to musí být hratelné ve více hráčích
+
+Musí se vymyslet jak budeme řešit typy karet, myšleno Human Knight, Goblin Warrior, Elf warrior ally, Kor, Spirit, Human, etc
+Jestli to udělat přes pole výčtů Enum[], nebo přes pole řetězců String[],
+interface pro každý typ není možný, protože by to nešlo upravovat během hry.
+HTV ---> Enum
+
+Vymyslet systém EVENT --> RESPONSE. Tzn. že budeme moci používat to něco jako je v javascriptu eventListener.
+Např. karta bude mít schopnost, že když se odtapne, hráč dostane jednu manu. My budeme chtít registrovat tuto událost
+a tak do metody untap() této karty přidáme něco jako fireAction(Event.UNTAP, Target thisCard), což dá vědět nějaké třídě
+EventListener, která se podívá které akce jsou zaregistrované pro Event.UNTAP týkající se této karty. Pokud třída EventListener
+najde nějakou akci pro tuto událost, tak tu akci provede (tj. zavolá uloženou metodu). Tato akce se sem zaregistruje
+při vstupu karty na hrací pole, nebo jindy podle karty.
+Zároveň každá akce hráče bude spouštět nějaký event. Například Event.UPKEEP, pro cíl Player p, to znamená, že když hráč p
+začne nové kolo a začne mu upkeep fáze, spustí se všechny akce zaregistrované pro Event.UPKEEP a týkající se hráče p.
+
+Navrhnout systém popisu aktivovatelných schopností --> nabízí se rozdělení na třídu Ability, která by spravovala požadavky na vykonání schopnosti,
+měla by metodu resolve, která by provedla efekt schopnosti --> umístila by jej na stack.
+Statické schopnosti typu Haste, Vigilance apod lze implementovat jako rozhraní
+
+Pořádně implementovat NegativeNotAllowedException
+
+KLÍČOVÝ BOD:
+Vymyslet jakým způsobem se bude přidělovat hráčům priorita, tak aby pokaždé, když něco přijde na stack, každů hráč se mohl ohradit
+a reagovat akcí. Resp. pokaždé když hráč něco zahraje, všichni hráči dostanou prioritu a v daném pořadí mohou reagovat
+tak jak je popsáno v pravidlech - u rozhranní Stack myslím je odkaz
