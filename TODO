@@ -29,6 +29,10 @@ Pořádně si rozmyslet, jak implementovat třídu Counter, jestli pro každý t
 countery na +1/+1 counter, -1/-1 counter a pojmenované countery, které by si nesly atribut Name jako String...
 Zvážit co je výhodnější, zatím tam je výčet ale to se dá upravit
 
+Rozmyslet si, jestli metody pro zamíchání karty do balíčku definovat ve třídě AbstractCard nebo ve třídě Player,
+NEBO jestli rovnou nevytvořit novou třídu Library, která tyto metody bude definovat, a ve třídě AbstractCard jen odkazovat
+na tyto metody... asi udělám třídu Library, kdyžtak mě zastav :D vrátit to zpět taky nebude problém :D
+
 KLÍČOVÝ BOD:
 Vymyslet jakým způsobem se bude přidělovat hráčům priorita, tak aby pokaždé, když něco přijde na stack, každů hráč se mohl ohradit
 a reagovat akcí. Resp. pokaždé když hráč něco zahraje, všichni hráči dostanou prioritu a v daném pořadí mohou reagovat

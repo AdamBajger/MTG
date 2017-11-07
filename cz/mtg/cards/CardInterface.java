@@ -1,11 +1,14 @@
 package cz.mtg.cards;
 
+import cz.mtg.cards.castable.CastableCardInterface;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.IndestructibleException;
 import cz.mtg.exceptions.NegativeNotAllowedException;
 import cz.mtg.exceptions.RestrictedCounterAmountException;
+import cz.mtg.game.CardPlacement;
 import cz.mtg.game.Color;
 import cz.mtg.game.CounterType;
+import cz.mtg.game.Player;
 
 import java.util.Set;
 
@@ -13,14 +16,14 @@ import java.util.Set;
  * This interface tells you which methods you need in a card
  *
  * ================= Default Method System ===================================
- * There are some default methods as {@link CardInterface#destroy() destroy()} or {@link CardInterface#getCardColors() getCardColors()}, etc.,
+ * There are some default methods as {@link CardInterface#destroy() destroy()} or {@link CastableCardInterface#getCardColors() getCardColors()}, etc.,
  * which are here to call their "more default" version, which is implemented in AbstractCard
  * For example:
  *  method destroy() by default only calls method defaultDestroy()
  *      destroy() ---> defaultDestroy()
  *
  *  the same is for method getCardColors()
- *      {@link CardInterface#getCardColors() getCardColors()} ---> {@link CardInterface#defaultGetCardColors() defaultGetCardColors()}
+ *      {@link CastableCardInterface#getCardColors() getCardColors()} ---> {@link CastableCardInterface#defaultGetCardColors() defaultGetCardColors()}
  *
  *  there are (or will be) more methods like this. The reason is following:
  *      We need to have some specific creature cards to be for example indestructible,
@@ -32,30 +35,15 @@ import java.util.Set;
  *      That will ensure, that the creature can not be destroyed by casual "destroying".
  * ----------------------------------
  * TODO
- *  make all reasonable methods overridable:
- *      tap
- *      flip
- *      defaultDestroy HTV
+ *  make all reasonable methods overridable
+ *
  */
 public interface CardInterface {
 
     String getName();
-
-    /**
-     * Casual default method to return set of colors this card inherits
-     * @return Set of colors
-     */
-    Set<Color> defaultGetCardColors();
-
-    /**
-     * This is the overridable method to get you colors of a card
-     * Reason for this split is for example ability called "devoid", which tells you that a card is colorless
-     * independently on its mana cost colors
-     * @return Set of colors
-     */
-    default Set<Color> getCardColors() {
-        return defaultGetCardColors();
-    }
+    Player getOwner();
+    Player getController();
+    void setController(Player controller);
 
     /**
      * According to MTG rules, if a card is in graveyard, hand, library or exile,
@@ -64,14 +52,6 @@ public interface CardInterface {
      * @return true if card is tapped, false otherwise
      */
     boolean isTapped();
-
-    /**
-     * According to MTG rules, if a card is in graveyard, hand, library or exile,
-     * it can NOT be tapped or untapped. When in exile, it even loses all abilities.
-     * If the card is not on the battlefield, the value should be false
-     * @return true if card is flipped, false otherwise
-     */
-    boolean isFlipped();
 
     /**
      * Makes card TAPPED where it is tapped or not
@@ -84,9 +64,42 @@ public interface CardInterface {
     void untap() throws AlreadyTappedOrUntappedException;
 
     /**
+     * According to MTG rules, if a card is in graveyard, hand, library or exile,
+     * it can NOT be tapped or untapped. When in exile, it even loses all abilities.
+     * If the card is not on the battlefield, the value should be false
+     * @return true if card is flipped, false otherwise
+     */
+    boolean isFacedDown();
+
+    /**
      * flips a card
      */
     void flip();
+
+    /**
+     * Just a getter
+     * @return where the card currently is
+     */
+    CardPlacement getCardPlacement();
+
+    /**
+     * Shuffles this card into library
+     * -->  that means it places card somewhere into a its owners library (top is the fastest)
+     *      and then shuffles the Library
+     */
+    void shuffleIntoLibrary();
+
+    /**
+     * Puts this card on top of its owners library
+     * Top = beginning of the LinkedList library
+     */
+    void putOnTopOfLibrary();
+
+    /**
+     * Puts this card on the bottom of its owners library
+     * Bottom = end of the LinkedList library
+     */
+    void putOnBottomOfLibrary();
 
     /**
      * Exiles this card.
@@ -95,7 +108,6 @@ public interface CardInterface {
      * only from subclasses, i. e. particular instances of this class
      */
     void exile();
-
 
     /**
      * This is the default destroy procedure, implemented by AbstractCard
@@ -115,6 +127,13 @@ public interface CardInterface {
     }
 
     /**
+     * This is the default method for putting a counter on a card
+     * @param cType the type of the Counter put
+     * @param amount the amount of counters to put
+     */
+    void defaultPutCounters(CounterType cType, int amount) throws NegativeNotAllowedException;
+
+    /**
      * This is an overridable method for putting some amount of counters on a card
      * @param cType Type of the Counter put
      * @param amount Amount of counters put
@@ -124,11 +143,11 @@ public interface CardInterface {
     }
 
     /**
-     * This is the default method for putting a counter on a card
-     * @param cType the type of the Counter put
-     * @param amount the amount of counters to put
+     * This is the default method for removing a counter from a card
+     * @param cType the type of the Counter removed
+     * @param amount the amount of counters to remove
      */
-    void defaultPutCounters(CounterType cType, int amount) throws NegativeNotAllowedException;
+    void defaultRemoveCounters(CounterType cType, int amount) throws RestrictedCounterAmountException, NegativeNotAllowedException;
 
     /**
      * This is an overridable method for removing some amount of counters from a card
@@ -140,15 +159,8 @@ public interface CardInterface {
     }
 
     /**
-     * This is the default method for removing a counter from a card
-     * @param cType the type of the Counter removed
-     * @param amount the amount of counters to remove
-     */
-    void defaultRemoveCounters(CounterType cType, int amount) throws RestrictedCounterAmountException, NegativeNotAllowedException;
-
-
-    /**
      * This is a simple getter for getting the amount of counters of a given type on this card
+     * i think this wil NOT be modified by any ability, thus no need for splitting into default and overridable method
      * @param cType given type of a Counter
      * @return amount of counters present
      */

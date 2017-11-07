@@ -6,7 +6,10 @@ Hlavně při psaní myslet na to, že to musí být hratelné ve více hráčíc
 Musí se vymyslet jak budeme řešit typy karet, myšleno Human Knight, Goblin Warrior, Elf warrior ally, Kor, Spirit, Human, etc
 Jestli to udělat přes pole výčtů Enum[], nebo přes pole řetězců String[],
 interface pro každý typ není možný, protože by to nešlo upravovat během hry.
-HTV ---> Enum
+EDIT:
+Dohodnuto, že se to udělá přes Enumy, ale jak? Pole Enum[], nebo List? Nebo dokonce Set?
+Nejvíce se mi líbí Set (jakože HashSet<Type>) protože budeme hlavně ověřovat jestli ta bytost má daný typ (metoda contains())
+a nebudeme muse přes ty typy iterovat. Pro set má metoda contains() konstatntní časovou složitost, což nám vyhovuje :)
 
 Vymyslet systém EVENT --> RESPONSE. Tzn. že budeme moci používat to něco jako je v javascriptu eventListener.
 Např. karta bude mít schopnost, že když se odtapne, hráč dostane jednu manu. My budeme chtít registrovat tuto událost

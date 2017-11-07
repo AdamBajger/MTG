@@ -1,6 +1,10 @@
 package cz.mtg.game;
 
+import cz.mtg.cards.CardInterface;
 import cz.mtg.game.targets.AttackableTarget;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class contains player
@@ -12,6 +16,8 @@ public class Player implements AttackableTarget {
 
     private int lives;
     private boolean priority;
+
+    private LinkedList<CardInterface> library;
 
     @Override
     public void applyDamage() {
