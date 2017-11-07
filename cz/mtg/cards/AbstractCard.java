@@ -8,6 +8,7 @@ import cz.mtg.game.CardPlacement;
 
 import cz.mtg.game.Counter;
 import cz.mtg.game.CounterType;
+import cz.mtg.game.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -19,55 +20,79 @@ import java.util.HashMap;
  * ------------------------------
  *  TODO:
  *      Complete the implementation of counters on this card
+ *      implement methods with TODO comment
  */
 public abstract class AbstractCard implements CardInterface {
 
-    private String name;
+    private final String name;
+    private final @NotNull Player owner;
+    private @NotNull Player controller;
     private boolean tapped;
-    private boolean flipped;
+    private boolean facedDown;
     private HashMap<CounterType, Counter> counters;
     private @NotNull CardPlacement cardPlacement = CardPlacement.EXILE; // initially card is in exile, outside of the game
 
 
     /**
-     * This constructor just takes name and sticks it to the card
-     * Now your card has a name, yay!
+     * This constructor takes name and sticks it to the card
+     * also an owner is defined in the card, with controller along the way
      * @param name Name for the newly constructed card
+     * @param owner Owner of the Card
      */
-    public AbstractCard(String name) {
+    public AbstractCard(String name, Player owner) {
         this.name = name;
+        this.owner = owner;
+        this.controller = owner;
     }
 
     public String getName() {
         return name;
     }
+    @NotNull
+    public Player getOwner() {
+        return owner;
+    }
+    @NotNull
+    public Player getController() {
+        return controller;
+    }
+    public void setController(Player controller) {
+        this.controller = controller;
+    }
 
     public boolean isTapped() {
         return tapped;
-
     }
-
-    public boolean isFlipped() {
-        return flipped;
-    }
-
-    @NotNull
-    public CardPlacement getCardPlacement() {
-        return cardPlacement;
-    }
-
     public void tap() throws AlreadyTappedOrUntappedException {
         if(tapped) throw new AlreadyTappedOrUntappedException(true);
         tapped = true;
     }
-
     public void untap() throws AlreadyTappedOrUntappedException {
         if(!tapped) throw new AlreadyTappedOrUntappedException(false);
         tapped = false;
     }
 
+    public boolean isFacedDown() {
+        return facedDown;
+    }
     public void flip() {
-        flipped = !flipped;
+        facedDown = !facedDown;
+    }
+
+    @NotNull
+    @Override
+    public CardPlacement getCardPlacement() {
+        return cardPlacement;
+    }
+
+    /**
+     * places a card where you want to place it
+     * It is used by particular public methods of this class
+     * It should not be use directly
+     * @param cardPlacement Where you want to put the card
+     */
+    private void setCardPlacement(@NotNull CardPlacement  cardPlacement) {
+        this.cardPlacement = cardPlacement;
     }
 
     @Override
@@ -75,23 +100,13 @@ public abstract class AbstractCard implements CardInterface {
         counters.get(cType).addAmount(amount);
     }
 
-
     @Override
     public void defaultRemoveCounters(CounterType cType, int amount) throws RestrictedCounterAmountException, NegativeNotAllowedException {
         counters.get(cType).removeAmount(amount);
     }
-
     @Override
     public int getCounterAmount(CounterType cType) {
         return 0;
-    }
-
-    /**
-     * places a card where you want to place it
-     * @param cardPlacement Where you want to put the card
-     */
-    protected void setCardPlacement(@NotNull CardPlacement  cardPlacement) {
-        this.cardPlacement = cardPlacement;
     }
 
     /**
@@ -99,23 +114,36 @@ public abstract class AbstractCard implements CardInterface {
      * Generally the card becomes inactive and loses all abilities
      */
     private void clear() {
-        this.flipped = false;
+        this.facedDown = false;
+        this.tapped = false;
+        this.counters.clear();
 
     }
 
+    @Override
+    public void shuffleIntoLibrary() {
+        //TODO
+    }
 
+    @Override
+    public void putOnTopOfLibrary() {
+        //TODO
+    }
+
+    @Override
+    public void putOnBottomOfLibrary() {
+        //TODO
+    }
+
+    @Override
     public void exile() {
         setCardPlacement(CardPlacement.EXILE);
+        // By default, all cards are exiled face-up, rule 406.3
         this.clear();
 
     }
 
-    /**
-     * This method is supposed to destroy the card
-     * Basically it puts the card into graveyard and sets unnecessary attributes to null
-     * If the card
-     */
-
+    @Override
     public void defaultDestroy() {
         this.setCardPlacement(CardPlacement.GRAVEYARD);
         System.out.println("Destroyed...");
@@ -141,8 +169,8 @@ public abstract class AbstractCard implements CardInterface {
         } else {
             sb.append(", untapped");
         }
-        if(isFlipped()) {
-            sb.append(", flipped face down");
+        if(isFacedDown()) {
+            sb.append(", faced down");
         }
         sb.append(", card is in ").append(getCardPlacement());
     }
