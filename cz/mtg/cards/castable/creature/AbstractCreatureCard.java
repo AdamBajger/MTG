@@ -1,11 +1,8 @@
 package cz.mtg.cards.castable.creature;
 
 import cz.mtg.cards.castable.AbstractCastableCard;
-import cz.mtg.game.Mana;
 import cz.mtg.game.ManaCollection;
 import cz.mtg.game.Player;
-
-import java.util.Set;
 
 /**
  * This class is here to allow PRIVATE attributes for creature

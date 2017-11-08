@@ -1,6 +1,6 @@
 package cz.mtg.cards.castable.creature;
 
-import cz.mtg.cards.castable.CastableCardInterface;
+import cz.mtg.cards.castable.CastableCard;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.game.Player;
 import cz.mtg.game.targets.DamageableTarget;
@@ -12,7 +12,7 @@ import cz.mtg.game.targets.DamageableTarget;
  *      Complete attack() method
  *      ---> develop attack mechanics
  */
-public interface Creature extends CastableCardInterface, DamageableTarget {
+public interface Creature extends CastableCard, DamageableTarget {
     /**
      * Casual check if the creature has summoning sickness
      * do not use this (unless you know what you are doing) in actual checking.

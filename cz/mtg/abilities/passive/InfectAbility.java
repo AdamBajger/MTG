@@ -1,4 +1,4 @@
-package cz.mtg.abilities;
+package cz.mtg.abilities.passive;
 
 import cz.mtg.cards.castable.creature.Creature;
 

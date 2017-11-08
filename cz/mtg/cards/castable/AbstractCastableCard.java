@@ -17,7 +17,7 @@ import java.util.Set;
  *      consider making more constructors for Color[] and List of colors.
  *      decide how to implement mana cost, which data structure to use!!!
  */
-public abstract class AbstractCastableCard extends AbstractCard implements CastableCard{
+public abstract class AbstractCastableCard extends AbstractCard implements CastableCard {
     private final ManaCollection manaCost;
 
     /**
