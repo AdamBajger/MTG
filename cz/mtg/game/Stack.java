@@ -1,5 +1,10 @@
 package cz.mtg.game;
 
+import cz.mtg.exceptions.NotOnStackException;
+
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * this class implements spell stack
  * When you cast a card, it goes to the top of the stack.
@@ -19,4 +24,20 @@ package cz.mtg.game;
  *
  */
 public class Stack {
+    private List<Stackable> spellQueue = new LinkedList<>();
+
+    /**
+     * Appends a Stackable object to the spell queue
+     * @param stackable Castable card, ability or other castable object
+     */
+    void put(Stackable stackable) {
+        spellQueue.add(stackable);
+    }
+
+    void remove(Stackable stackable) throws NotOnStackException {
+        if(!spellQueue.remove(stackable)) {
+            throw new NotOnStackException();
+        }
+        // TODO implement
+    }
 }

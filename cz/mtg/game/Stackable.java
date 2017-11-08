@@ -2,6 +2,7 @@
 package cz.mtg.game;
 
 import cz.mtg.exceptions.InsufficientManaException;
+import cz.mtg.exceptions.InvalidActionException;
 
 /**
  * This interface describes how an object placeable on stack should look and which methods to implement
@@ -10,18 +11,34 @@ import cz.mtg.exceptions.InsufficientManaException;
  */
 public interface Stackable {
     /**
-     * This method contains what happens when a card or ability resolves.
-     * That means, what happens if the card is on the TOP of the STACK and every player passed its priority
-     * without doing anything.
-     * @return
+     * This method returns mana cost of this castable object
+     * @return mana cost
      */
-    boolean resolve();
+    ManaCollection getManCost();
+
+    /**
+     * This method checks if additional costs can be satisfied.
+     * By default there are no conditions, thus all conditions are met (default return is True)
+     *  For example for card Harrow, it checks if there is a land on battlefield, that could be sacrificed
+     *  as an additional cost to cast Harrow.
+     * @return True if conditions are met, False otherwise
+     */
+    default boolean castConditionsCheck() {
+        return true;
+    }
+
+    /**
+     * This will return the conditions that have to be satisfied in a human readable manner
+     * For example for Harrow, it would return "As an additional cost to cast Harrow, sacrifice a land."
+     * @return Text-written conditions for casting this spell
+     */
+    String getCastConditionsMessage();
 
     /**
      * Casual default method to cast a card
      * @return True if card successfully went to Stack, False otherwise
      */
-    boolean defaultCast();
+    void defaultCast() throws InsufficientManaException;
 
     /**
      * Overridable method for casting a card
@@ -46,7 +63,18 @@ public interface Stackable {
      *
      * @return True if card successfully went to Stack, False otherwise
      */
-    default boolean cast() throws InsufficientManaException {
-        return defaultCast();
+    default void cast() throws InsufficientManaException, InvalidActionException {
+        if(castConditionsCheck()) {
+            defaultCast();
+        } else {
+
+        }
     }
+
+    /**
+     * This method contains what happens when a card or ability resolves.
+     * That means, what happens if the card is on the TOP of the STACK and every player passed its priority
+     * without doing anything.
+     */
+    boolean resolve();
 }

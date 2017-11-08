@@ -1,6 +1,6 @@
 package cz.mtg.cards;
 
-import cz.mtg.cards.castable.CastableCardInterface;
+import cz.mtg.abilities.passive.IndestructibleAbility;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.IndestructibleException;
 import cz.mtg.exceptions.NegativeNotAllowedException;
@@ -16,21 +16,21 @@ import java.util.Set;
  * This interface tells you which methods you need in a card
  *
  * ================= Default Method System ===================================
- * There are some default methods as {@link CardInterface#destroy() destroy()} or {@link CastableCardInterface#getCardColors() getCardColors()}, etc.,
+ * There are some default methods as {@link Card#destroy() destroy()} or {@link Card#getCardColors() getCardColors()}, etc.,
  * which are here to call their "more default" version, which is implemented in AbstractCard
  * For example:
  *  method destroy() by default only calls method defaultDestroy()
  *      destroy() ---> defaultDestroy()
  *
  *  the same is for method getCardColors()
- *      {@link CastableCardInterface#getCardColors() getCardColors()} ---> {@link CastableCardInterface#defaultGetCardColors() defaultGetCardColors()}
+ *      {@link Card#getCardColors() getCardColors()} ---> {@link Card#defaultGetCardColors() defaultGetCardColors()}
  *
  *  there are (or will be) more methods like this. The reason is following:
  *      We need to have some specific creature cards to be for example indestructible,
- *      with this system of methods, we can just implement interface {@link cz.mtg.abilities.IndestructibleAbility IndestructibleAbility}.
+ *      with this system of methods, we can just implement interface {@link IndestructibleAbility IndestructibleAbility}.
  *      Now, IndestructibleAbility interface extends this, CardInterface, interface
- *      and overrides the default {@link CardInterface#destroy() destroy()} method
- *      with different {@link cz.mtg.abilities.IndestructibleAbility#destroy() destroy()} method which,
+ *      and overrides the default {@link Card#destroy() destroy()} method
+ *      with different {@link IndestructibleAbility#destroy() destroy()} method which,
  *      instead of actually destroying the creature, throws an {@link IndestructibleException exception}.
  *      That will ensure, that the creature can not be destroyed by casual "destroying".
  * ----------------------------------
@@ -38,7 +38,7 @@ import java.util.Set;
  *  make all reasonable methods overridable
  *
  */
-public interface CardInterface {
+public interface Card {
 
     String getName();
     Player getOwner();
@@ -64,9 +64,7 @@ public interface CardInterface {
     void untap() throws AlreadyTappedOrUntappedException;
 
     /**
-     * According to MTG rules, if a card is in graveyard, hand, library or exile,
-     * it can NOT be tapped or untapped. When in exile, it even loses all abilities.
-     * If the card is not on the battlefield, the value should be false
+     * Tells you if the card is faced down (like hidden for players)
      * @return true if card is flipped, false otherwise
      */
     boolean isFacedDown();
@@ -77,7 +75,23 @@ public interface CardInterface {
     void flip();
 
     /**
-     * Just a getter
+     * Casual default method to return set of colors this card inherits
+     * @return Set of colors
+     */
+    Set<Color> defaultGetCardColors();
+
+    /**
+     * This is the overridable method to get you colors of a card
+     * Reason for this split is for example ability called "devoid", which tells you that a card is colorless
+     * independently on its mana cost colors
+     * @return Set of colors
+     */
+    default Set<Color> getCardColors() {
+        return defaultGetCardColors();
+    }
+
+    /**
+     * Just a getter that tells you where the card is
      * @return where the card currently is
      */
     CardPlacement getCardPlacement();
@@ -86,26 +100,28 @@ public interface CardInterface {
      * Shuffles this card into library
      * -->  that means it places card somewhere into a its owners library (top is the fastest)
      *      and then shuffles the Library
+     *      Also the cardPlacement attribute is changed to match game zone
      */
     void shuffleIntoLibrary();
 
     /**
      * Puts this card on top of its owners library
      * Top = beginning of the LinkedList library
+     * Also the cardPlacement attribute is changed to match game zone
      */
     void putOnTopOfLibrary();
 
     /**
      * Puts this card on the bottom of its owners library
      * Bottom = end of the LinkedList library
+     * Also the cardPlaycement attribute is changed to match game zone
      */
     void putOnBottomOfLibrary();
 
     /**
      * Exiles this card.
      * Card is placed to EXILE and its attributes are nulled
-     * Consider changing access to protected - so we will have to access this method
-     * only from subclasses, i. e. particular instances of this class
+     * Also the cardPlacement attribute is changed to match game zone
      */
     void exile();
 
@@ -118,9 +134,9 @@ public interface CardInterface {
 
     /**
      * This is also default method. Unlike the defaultDestroy() method,
-     * this method is overridden for example by {@link cz.mtg.abilities.IndestructibleAbility} interface
+     * this method is overridden for example by {@link IndestructibleAbility} interface
      * to make the unit indestructible
-     * @throws IndestructibleException
+     * @throws IndestructibleException if the creature is indestructible
      */
     default void destroy() throws IndestructibleException {
         this.defaultDestroy();

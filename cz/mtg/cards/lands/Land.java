@@ -1,6 +1,6 @@
 package cz.mtg.cards.lands;
 
-import cz.mtg.cards.CardInterface;
+import cz.mtg.cards.Card;
 import cz.mtg.game.Color;
 
 import java.util.Set;
@@ -8,25 +8,18 @@ import java.util.Set;
 /**
  * Interface describing general land card
  * Contains overridable methods as in CardInterface
- * @see CardInterface
+ * @see Card
+ *
+ * -------------------------------------
+ *  TODO:
+ *      Rework methods forn mana
+ *      Generally the Land card does NOT give you mana, only specific land types have this ability
+ *      "tap for mana" should be implemented as a regular ability, so we can have lands, that does not give mana
  */
-public interface Land extends CardInterface {
-    /**
-     * Returns a Set of Mana objects representing the mana this land gives
-     * @return given mana Set
-     */
-    int[] defaultGenerateMana();
+public interface Land extends Card {
 
     /**
-     * Overridable method for getting mana from the land (basically "tap for mana" action)
-     * @return array of ints containing info about mana generated
-     */
-    default int[] generateMana() {
-        return defaultGenerateMana();
-    }
-
-    /**
-     * According to rules, landcard has no color nor mana cost.
+     * According to rules, land card has no color nor mana cost.
      * @return null for no color
      */
     @Override

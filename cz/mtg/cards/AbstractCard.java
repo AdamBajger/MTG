@@ -22,7 +22,7 @@ import java.util.HashMap;
  *      Complete the implementation of counters on this card
  *      implement methods with TODO comment
  */
-public abstract class AbstractCard implements CardInterface {
+public abstract class AbstractCard implements Card {
 
     private final String name;
     private final @NotNull Player owner;
@@ -86,20 +86,28 @@ public abstract class AbstractCard implements CardInterface {
     }
 
     /**
-     * places a card where you want to place it
+     * takes a note about where the card already is
      * It is used by particular public methods of this class
-     * It should not be use directly
+     * It should not be used directly
+     * Use this to keep track of where the card is
      * @param cardPlacement Where you want to put the card
      */
-    private void setCardPlacement(@NotNull CardPlacement  cardPlacement) {
+    protected void setCardPlacement(@NotNull CardPlacement  cardPlacement) {
         this.cardPlacement = cardPlacement;
+    }
+
+    private void removeCardFromPreviousZone() {
+        //SIDEBOARD, LIBRARY, HAND, STACK, BATTLEFIELD, GRAVEYARD, EXILE, COMMAND_ZONE;
+        switch(getCardPlacement()) {
+            case SIDEBOARD:
+
+        }
     }
 
     @Override
     public void defaultPutCounters(CounterType cType, int amount) throws NegativeNotAllowedException {
         counters.get(cType).addAmount(amount);
     }
-
     @Override
     public void defaultRemoveCounters(CounterType cType, int amount) throws RestrictedCounterAmountException, NegativeNotAllowedException {
         counters.get(cType).removeAmount(amount);
@@ -112,17 +120,19 @@ public abstract class AbstractCard implements CardInterface {
     /**
      * Card is cleared of counters, sickness, tap/flip values, power, toughness, etc.
      * Generally the card becomes inactive and loses all abilities
+     * use thgis when you destroy card or exile it
      */
     private void clear() {
         this.facedDown = false;
         this.tapped = false;
         this.counters.clear();
-
     }
 
     @Override
     public void shuffleIntoLibrary() {
-        //TODO
+        setCardPlacement(CardPlacement.LIBRARY);
+        getOwner().getLibrary().putCardOnTop(this);
+        getOwner().getLibrary().shuffle();
     }
 
     @Override
@@ -145,6 +155,7 @@ public abstract class AbstractCard implements CardInterface {
 
     @Override
     public void defaultDestroy() {
+
         this.setCardPlacement(CardPlacement.GRAVEYARD);
         System.out.println("Destroyed...");
     }

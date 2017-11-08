@@ -1,6 +1,8 @@
 package cz.mtg.testCards;
 
-public class Glimmerpost extends cz.mtg.cards.lands.LandCard{
+import cz.mtg.cards.lands.AbstractLandCard;
+
+public class Glimmerpost extends AbstractLandCard {
 
 
     putOnBate() {

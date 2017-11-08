@@ -1,7 +1,7 @@
 package cz.mtg.testCards;
 
-import cz.mtg.cards.lands.LandCard;
+import cz.mtg.cards.lands.AbstractLandCard;
 
-public class Plains extends LandCard {
+public class Plains extends AbstractLandCard {
 
 }

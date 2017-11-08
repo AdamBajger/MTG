@@ -8,13 +8,5 @@ import cz.mtg.exceptions.InsufficientManaException;
  * i will come back to this later, I have to time now
  */
 public abstract class Ability implements Stackable {
-    @Override
-    public boolean resolve() {
-        return false;
-    }
 
-    @Override
-    public void cast() throws InsufficientManaException {
-
-    }
 }

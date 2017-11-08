@@ -54,15 +54,4 @@ public class Mana {
     public int getAmount() {
         return amount;
     }
-
-    /**
-     * There is explicitly said that two mana objects are equal, if theyr color is equal
-     * this prevent having more Mana objects in one Set
-     * @param obj compared object
-     * @return True if input obj is equal to this, False otherwise
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return obj.getClass() == this.getClass() && ((Mana)obj).color == this.color;
-    }
 }

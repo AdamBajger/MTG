@@ -1,16 +1,16 @@
 package cz.mtg.testCards;
 
-import cz.mtg.abilities.IndestructibleAbility;
+import cz.mtg.abilities.passive.IndestructibleAbility;
 import cz.mtg.cards.castable.Artifact;
 import cz.mtg.cards.castable.creature.Creature;
-import cz.mtg.cards.castable.creature.CreatureCard;
+import cz.mtg.cards.castable.creature.AbstractCreatureCard;
 import cz.mtg.exceptions.RestrictedManaAmountException;
 import cz.mtg.game.Mana;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlightsteelColossus extends CreatureCard implements Creature, Artifact, IndestructibleAbility {
+public class BlightsteelColossus extends AbstractCreatureCard implements Creature, Artifact, IndestructibleAbility {
     private Set<Mana> manaCost = new HashSet<Mana>();
 
     /**
