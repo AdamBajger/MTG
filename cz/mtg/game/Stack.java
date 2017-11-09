@@ -24,20 +24,33 @@ import java.util.List;
  *
  */
 public class Stack {
-    private List<Stackable> spellQueue = new LinkedList<>();
+    private LinkedList<Stackable> spellQueue = new LinkedList<>();
 
     /**
      * Appends a Stackable object to the spell queue
      * @param stackable Castable card, ability or other castable object
      */
-    void put(Stackable stackable) {
-        spellQueue.add(stackable);
+    public void put(Stackable stackable) {
+        spellQueue.push(stackable);
     }
 
-    void remove(Stackable stackable) throws NotOnStackException {
+    /**
+     * Removes spell from the stack
+     * @param stackable any stackable object (castable card or ability)
+     * @throws NotOnStackException If the spell is not on stack.
+     */
+    public void remove(Stackable stackable) throws NotOnStackException {
         if(!spellQueue.remove(stackable)) {
             throw new NotOnStackException();
         }
-        // TODO implement
     }
+
+    /**
+     * This will take the top card on the stack and applies its effects that were assigned by its casting
+     * this will refresh other players' priority and everyone can react
+     */
+    public void resolveNext() {
+        spellQueue.pop().resolve();
+    }
+
 }

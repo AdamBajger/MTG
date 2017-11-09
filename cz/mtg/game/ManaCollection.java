@@ -1,5 +1,6 @@
 package cz.mtg.game;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -103,7 +104,19 @@ public class ManaCollection {
         return returnSet;
     }
 
+    /**
+     * Converts this mana object to a Set of Mana objects and returns that set
+     * Used for purpose of iterating when checking enough mana
+     * @return
+     */
+    public Set<Mana> convertToManaSet() {
 
+    }
 
-
+    @Override
+    public String toString() {
+        return "ManaCollection{" +
+                "pool=" + Arrays.toString(pool) +
+                '}';
+    }
 }

@@ -1,5 +1,8 @@
 package cz.mtg.exceptions;
 
+/**
+ * This exception is thrown whenever a Player wants to cast a spell or ability, but has not enough mana
+ */
 public class InsufficientManaException extends Exception {
     /**
      * Throws an exception with a message appended behind the default message "Not enough mana."

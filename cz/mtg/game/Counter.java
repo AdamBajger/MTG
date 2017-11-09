@@ -13,14 +13,14 @@ import cz.mtg.exceptions.RestrictedCounterAmountException;
  */
 public class Counter {
     private int amount;
-    private String counterType;
+    private CounterType counterType;
 
     /**
      * Creates a counter of given type with given amount
      * @param amount amount of counters
      * @param counterType type of the counter
      */
-    public Counter(int amount, String counterType) {
+    public Counter(int amount, CounterType counterType) {
         this.amount = amount;
         this.counterType = counterType;
     }
@@ -65,6 +65,10 @@ public class Counter {
 
     @Override
     public String toString() {
-        return "Counter{" + amount + " " + counterType.toLowerCase() + " counters" + '}';
+        return "Counter{" + amount + " " + counterType.toString().toLowerCase() + " counters" + '}';
+    }
+
+    public int getAmount() {
+        return amount;
     }
 }

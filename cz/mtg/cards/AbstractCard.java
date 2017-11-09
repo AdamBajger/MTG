@@ -2,6 +2,7 @@ package cz.mtg.cards;
 
 
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
+import cz.mtg.exceptions.InvalidActionException;
 import cz.mtg.exceptions.NegativeNotAllowedException;
 import cz.mtg.exceptions.RestrictedCounterAmountException;
 import cz.mtg.game.CardPlacement;
@@ -39,7 +40,7 @@ public abstract class AbstractCard implements Card {
      * @param name Name for the newly constructed card
      * @param owner Owner of the Card
      */
-    public AbstractCard(String name, Player owner) {
+    public AbstractCard(String name, @NotNull Player owner) {
         this.name = name;
         this.owner = owner;
         this.controller = owner;
@@ -96,11 +97,57 @@ public abstract class AbstractCard implements Card {
         this.cardPlacement = cardPlacement;
     }
 
+    /**
+     * This method removes a card from current zone based on {@code cardPlacement} attribute
+     * call this method every time you move card from somewhere to somewhere.
+     *
+     * CAUTION:
+     * If you call this method and do not move the card, the card will disappear!
+     */
     private void removeCardFromPreviousZone() {
         //SIDEBOARD, LIBRARY, HAND, STACK, BATTLEFIELD, GRAVEYARD, EXILE, COMMAND_ZONE;
         switch(getCardPlacement()) {
             case SIDEBOARD:
-
+                // TODO:
+                // remove from its owners sideboard
+                // I don't thing this case will happen at any point
+                throw new RuntimeException("For some fuckin' sake we had to remove card from sideboard!");
+            case LIBRARY:
+                if(!getOwner().getLibrary().removeCard(this)) {
+                    throw new RuntimeException("Tried to move card from library but Card is not in the library.");
+                }
+                break;
+            case HAND:
+                if(!getOwner().getHand().remove(this)) {
+                    throw new RuntimeException("Tried to move card from hand but Card is not in hand.");
+                }
+                break;
+            case STACK:
+                // not required here, cards are removed from stack automatically, or by ability effects
+                break;
+            case BATTLEFIELD:
+                if(!getController().getGameAssigned().getBattlefield().remove(this)) {
+                    throw new RuntimeException("Tried to move card from battlefield but Card is not on battlefield.");
+                }
+                break;
+            case GRAVEYARD:
+                if(!getOwner().getGraveyard().remove(this)) {
+                    throw new RuntimeException("Tried to move card from graveyard but Card is not in graveyard.");
+                }
+                break;
+            case EXILE:
+                if(!getController().getGameAssigned().getExile().remove(this)) {
+                    throw new RuntimeException("Tried to move card from exile but Card is not in exile.");
+                }
+                break;
+            case COMMAND_ZONE:
+                if(!getController().getGameAssigned().getCommandZone().remove(this)) {
+                    throw new RuntimeException("Tried to move card from command zone but Card is not there.");
+                }
+                break;
+            default:
+                // If we got here, then the card was not in a known game zone, or some other error --> throw Runtime
+                throw new RuntimeException("Zone previously containing Card not recognized!");
         }
     }
 
@@ -114,7 +161,7 @@ public abstract class AbstractCard implements Card {
     }
     @Override
     public int getCounterAmount(CounterType cType) {
-        return 0;
+        return counters.get(cType).getAmount();
     }
 
     /**
@@ -130,33 +177,41 @@ public abstract class AbstractCard implements Card {
 
     @Override
     public void shuffleIntoLibrary() {
-        setCardPlacement(CardPlacement.LIBRARY);
-        getOwner().getLibrary().putCardOnTop(this);
-        getOwner().getLibrary().shuffle();
+        putOnTopOfLibrary(); // puts Card on top of library, clears card and removes it from previous zone
+        getOwner().getLibrary().shuffle(); // the method says SHUFFLE into... so
     }
 
     @Override
     public void putOnTopOfLibrary() {
-        //TODO
+        clear(); // card loses abilities and counters
+        removeCardFromPreviousZone(); // remove the card from previous zone
+        getOwner().getLibrary().putCardOnTop(this); // put the card to the new zone
+        setCardPlacement(CardPlacement.LIBRARY); // keep track of where the card is
     }
 
     @Override
     public void putOnBottomOfLibrary() {
-        //TODO
+        clear(); // card loses abilities and counters
+        removeCardFromPreviousZone(); // remove the card from previous zone
+        getOwner().getLibrary().putCardOnBottom(this); // put the card to the new zone
+        setCardPlacement(CardPlacement.LIBRARY); // keep track of where the card is
     }
 
     @Override
     public void exile() {
-        setCardPlacement(CardPlacement.EXILE);
         // By default, all cards are exiled face-up, rule 406.3
-        this.clear();
-
+        clear(); // card loses abilities and counters
+        removeCardFromPreviousZone(); // remove the card from previous zone
+        getController().getGameAssigned().getExile().add(this); // put the card to the new zone
+        setCardPlacement(CardPlacement.EXILE); // keep track of where the card is
     }
 
     @Override
     public void defaultDestroy() {
-
-        this.setCardPlacement(CardPlacement.GRAVEYARD);
+        clear(); // card loses abilities and counters
+        removeCardFromPreviousZone(); // remove the card from previous zone
+        getOwner().getGraveyard().push(this);
+        setCardPlacement(CardPlacement.GRAVEYARD);
         System.out.println("Destroyed...");
     }
 

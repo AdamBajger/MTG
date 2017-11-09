@@ -1,20 +1,55 @@
 
 package cz.mtg.game;
 
+import cz.mtg.cards.Card;
 import cz.mtg.exceptions.InsufficientManaException;
 import cz.mtg.exceptions.InvalidActionException;
+
+import java.util.Set;
 
 /**
  * This interface describes how an object placeable on stack should look and which methods to implement
  * This Interface is crucial to the MTG game core, because it describes how Cards and Abilities are cast
- * @author
  */
 public interface Stackable {
     /**
-     * This method returns mana cost of this castable object
-     * @return mana cost
+     * This method returns the source Card causing this spell to go on stack
+     * @return source Card of the spell
      */
-    ManaCollection getManCost();
+    Card getSource();
+
+    /**
+     * By default this card returns the controller of card causing this spell to go on stack
+     * Basically the caster of this spell
+     * @return Casting Player
+     */
+    default Player getCastingPlayer() {
+        return getSource().getController();
+    }
+
+    /**
+     * This method returns mana cost of this castable object
+     * @return mana needed to cast this spell
+     */
+    Set<Mana> getManCost();
+
+    /**
+     * This method checks if a given player has enough mana to cast this
+     * The casting player is always the owner of the casted card or owner of the casting source
+     * @return True if there is enough mana. False otherwise
+     */
+    default boolean enoughMana() {
+        ManaCollection checkedManaPool = getSource().getController().getManaPool();
+        Set<Mana> manaCost = getManCost();
+        // for each mana color in manaCost, check if there is enough mana of that color in checkedManaPool
+        for(Mana m : manaCost) {
+            if(!(checkedManaPool.getManaOfColorAmount(m.getColor()) >= m.getAmount())) {
+                return false;
+            }
+        }
+        // no insufficient mana found ---> return true
+        return true;
+    }
 
     /**
      * This method checks if additional costs can be satisfied.
@@ -23,7 +58,7 @@ public interface Stackable {
      *  as an additional cost to cast Harrow.
      * @return True if conditions are met, False otherwise
      */
-    default boolean castConditionsCheck() {
+    default boolean additionalCastConditionsCheck() {
         return true;
     }
 
@@ -32,13 +67,15 @@ public interface Stackable {
      * For example for Harrow, it would return "As an additional cost to cast Harrow, sacrifice a land."
      * @return Text-written conditions for casting this spell
      */
-    String getCastConditionsMessage();
+    String getEffectDescription();
 
     /**
      * Casual default method to cast a card
-     * @return True if card successfully went to Stack, False otherwise
+     * it just puts a spell on stack
      */
-    void defaultCast() throws InsufficientManaException;
+    default void defaultCast() {
+        getSource().getController().getGameAssigned().getSpellStack().put(this);
+    }
 
     /**
      * Overridable method for casting a card
@@ -61,14 +98,20 @@ public interface Stackable {
      *      --> Those exception do not exist yet, but should be introduced
      *      --> AdditionalCostException...
      *
-     * @return True if card successfully went to Stack, False otherwise
      */
-    default void cast() throws InsufficientManaException, InvalidActionException {
-        if(castConditionsCheck()) {
-            defaultCast();
-        } else {
-
+    default void cast(Stack currentStack) throws InsufficientManaException, InvalidActionException {
+        if(!enoughMana()) {
+            // not enough mana
+            throw new InsufficientManaException();
         }
+
+        if(!additionalCastConditionsCheck()) {
+            // additional conditions not met
+            throw new InvalidActionException(getEffectDescription());
+        }
+
+        // if everything is ok, put it on stack
+        defaultCast();
     }
 
     /**
@@ -76,5 +119,5 @@ public interface Stackable {
      * That means, what happens if the card is on the TOP of the STACK and every player passed its priority
      * without doing anything.
      */
-    boolean resolve();
+    void resolve();
 }

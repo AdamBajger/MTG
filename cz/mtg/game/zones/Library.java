@@ -64,11 +64,10 @@ public class Library {
      * cards that are available.
      * @param n the number of cards to be taken from top
      * @return linked list of taken cards
-     * @throws NoSuchElementException if the library is empty
      */
-    public LinkedList<Card> takeTopNCards(int n) throws NoSuchElementException {
+    public LinkedList<Card> takeTopNCards(int n) {
         LinkedList<Card> topCards = new LinkedList<>();
-        if(cards.size() == 0) throw new NoSuchElementException();
+        //if(cards.size() == 0) throw new NoSuchElementException();
         for(int i = 0; i < n; i++) {
             try {
                 topCards.addLast(cards.pop());
@@ -85,13 +84,17 @@ public class Library {
      * Removes a given card from the library
      * @param card given card
      */
-    public void removeCard(Card card) {
-        cards.remove(card);
+    public boolean removeCard(Card card) {
+        return cards.remove(card);
     }
 
     /**
      * Removes all cards present in a given collection
      * @param cardsToRemove given collection
+     * ------------------------------
+     *  TODO:
+     *      well it would be nice if we had some way to check if anything happened here
+     *      like... which cards were removed and which were not found
      */
     public void removeCards(Collection<Card> cardsToRemove) {
         cards.removeAll(cardsToRemove);

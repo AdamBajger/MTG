@@ -24,7 +24,7 @@ public class Mana {
      * @param c desired color
      * @param amount desired amount
      */
-    public Mana(Color c, int amount) throws RestrictedManaAmountException {
+    public Mana(Color c, int amount) {
         this(c);
         if(amount > 0) {
             this.amount = amount;
@@ -53,5 +53,13 @@ public class Mana {
 
     public int getAmount() {
         return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Mana{" +
+                "color=" + color +
+                ", amount=" + amount +
+                '}';
     }
 }

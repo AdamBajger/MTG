@@ -6,7 +6,7 @@ package cz.mtg.exceptions;
  * --> split those methods to "add" and "remove" methods
  *
  */
-public class NegativeNotAllowedException extends Exception {
+public class NegativeNotAllowedException extends RuntimeException {
     /**
      * Constructs a new exception with {@code null} as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a

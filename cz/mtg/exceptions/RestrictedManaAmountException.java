@@ -3,7 +3,7 @@ package cz.mtg.exceptions;
 /**
  * Throw this when working with mana and someomne attempts to decrease value of mana below zero
  */
-public class RestrictedManaAmountException extends Exception {
+public class RestrictedManaAmountException extends RuntimeException {
     /**
      * Propagates custom message to the exception
      * @param msg the message

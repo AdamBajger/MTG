@@ -35,21 +35,23 @@ public abstract class AbstractCastableCard extends AbstractCard implements Casta
     }
 
     /**
-     * For now this method is abstract, but maybe it is not necessary, let's decide later
-     * It takes THIS card and creates a spell carrying this card.
-     * That spell is then moved to STACK, where it stays according to MTG rules
-     * @return Spell containing cast card
+     * Appends info about mana cost to a given string builder
+     * @param sb given string builder
      */
-    public void defaultCast() throws InsufficientManaException {
-        castConditionsCheck();
-        super.setCardPlacement(CardPlacement.STACK);
+    private void appendManaCostInfo(StringBuilder sb) {
+        sb.append(", ");
+        sb.append(manaCost);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("CastableCard{" + super.getName() + ", " + manaCost);
+        StringBuilder sb = new StringBuilder();
+        appendBasicInfo(sb);
+        appendManaCostInfo(sb);
         appendStateInfo(sb);
 
         return sb.toString();
     }
+
+
 }
