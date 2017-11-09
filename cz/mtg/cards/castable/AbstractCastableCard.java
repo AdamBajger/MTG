@@ -1,12 +1,11 @@
 package cz.mtg.cards.castable;
 
 import cz.mtg.cards.AbstractCard;
+import cz.mtg.cards.Card;
 import cz.mtg.exceptions.InsufficientManaException;
-import cz.mtg.game.CardPlacement;
-import cz.mtg.game.Color;
-import cz.mtg.game.ManaCollection;
-import cz.mtg.game.Player;
+import cz.mtg.game.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,20 +17,44 @@ import java.util.Set;
  *      decide how to implement mana cost, which data structure to use!!!
  */
 public abstract class AbstractCastableCard extends AbstractCard implements CastableCard {
-    private final ManaCollection manaCost;
+    private final Set<Mana> manaCost;
 
     /**
      * Creates a named card with given manacost
      * @param name desired name
      */
-    public AbstractCastableCard(String name, Player owner, ManaCollection manaCost) {
+    public AbstractCastableCard(String name, Player owner, Set<Mana> manaCost) {
         super(name, owner);
         this.manaCost = manaCost;
     }
 
+    /**
+     * This method returns the source Card causing this spell to go on stack
+     *
+     * @return source Card of the spell
+     */
+    @Override
+    public Card getSource() {
+        return null;
+    }
+
+    /**
+     * This method returns mana cost of this castable object
+     *
+     * @return mana needed to cast this spell
+     */
+    @Override
+    public Set<Mana> getManCost() {
+        return manaCost;
+    }
+
     @Override
     public Set<Color> defaultGetCardColors() {
-        return manaCost.getColors();
+        Set<Color> returnedColors = new HashSet<>();
+        for(Mana m : getManCost()) {
+            returnedColors.add(m.getColor());
+        }
+        return returnedColors;
     }
 
     /**

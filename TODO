@@ -33,6 +33,13 @@ Rozmyslet si, jestli metody pro zamíchání karty do balíčku definovat ve tř
 NEBO jestli rovnou nevytvořit novou třídu Library, která tyto metody bude definovat, a ve třídě AbstractCard jen odkazovat
 na tyto metody... asi udělám třídu Library, kdyžtak mě zastav :D vrátit to zpět taky nebude problém :D
 
+Předělat Mana object, dodělat hashCode() a equals() tak aby dvě many byly porovnávány podle color a spendableOn parametru,
+nikoli podle množství. Předělat ManaCollection tak, aby vnitřeně pracovala se Setem, protože se v mana poolu může vyskytovat
+více druhů many než jen základní barvy (liší se podle toho, za co je můžeš utratit).
+Při porovnávání manacostu a zjišťování, jestli má hráč dostatek many, uplatňovat to,
+že hráč danou manu může utratit jen za určité spelly ---> vymyslet to tak, aby si hráč sám mohl zvolit kterou manu utrati? :D
+Zatím, nepodstatné, nechat automaticky tak, že omezená mana je utracena přednostně, pokud možno...
+
 KLÍČOVÝ BOD:
 Vymyslet jakým způsobem se bude přidělovat hráčům priorita, tak aby pokaždé, když něco přijde na stack, každů hráč se mohl ohradit
 a reagovat akcí. Resp. pokaždé když hráč něco zahraje, všichni hráči dostanou prioritu a v daném pořadí mohou reagovat

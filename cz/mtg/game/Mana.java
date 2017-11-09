@@ -2,6 +2,9 @@ package cz.mtg.game;
 
 import cz.mtg.exceptions.RestrictedManaAmountException;
 
+import java.util.Objects;
+
+
 /**
  * This class carries mana color and amount of that mana internally
  * It allows you to store mana cost in a Set and still retain different amounts of same mana type.
@@ -10,6 +13,7 @@ import cz.mtg.exceptions.RestrictedManaAmountException;
 public class Mana {
     private Color color;
     private int amount = 1;
+    private Class<? extends Stackable> spendableOn = Stackable.class;
 
     /**
      * Constructs a mana unit with desired color and amount 1
@@ -53,6 +57,32 @@ public class Mana {
 
     public int getAmount() {
         return amount;
+    }
+
+    /**
+     * Checks if this mana can be spend on any Stackable spell (i. e. attribute spendableOn = Stackable.class)
+     * If not, it checks whether the castSpell is instance of the class this mana is supposed to be spent on
+     * and if it IS, it returns true, if it is NOT, it returns false.
+     * @param castSpell spell being cast
+     * @return True/False
+     */
+    public boolean canBeSpentOn(Stackable castSpell) {
+        return spendableOn == Stackable.class || castSpell.getClass().isInstance(spendableOn);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Mana)) return false;
+        Mana mana = (Mana) o;
+        return getColor() == mana.getColor() &&
+                Objects.equals(spendableOn, mana.spendableOn);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getColor(), spendableOn);
     }
 
     @Override

@@ -1,9 +1,10 @@
 package cz.mtg.game;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import cz.mtg.cards.Card;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * This class represents a collection of mana, 
@@ -12,33 +13,32 @@ import java.util.Set;
  *
  * ------------------------------------
  *  TODO
- *      Concept of this class is really only a prototype and should be discussed
- *      and eventually REWORKED
+ *      Rework this to work and HashSet, because we will need more Mana types, that just those basic
+ *      For example mana, that can be spent only to certain spells
+ *      So we will never know which types of mana will be added
  */
 public class ManaCollection {
-    private final int[] pool = new int[Color.cachedValues().length];
+    //private final int[] pool = new int[Color.cachedValues().length];
+    // Trust me, Map really IS the right implementation -->
+    private final Map<Mana, Integer> pool = new HashMap<>();
 
     /**
-     * Constructs a mana collection based on Mana[] array
-     * @param pool array of Mana objects
+     * Creates empty mana collection
      */
-    public ManaCollection(Mana[] pool) {
+    public ManaCollection() {}
+
+
+    /**
+     * Constructs a mana collection based on give Set of Mana objects
+     * @param pool given Set of Mana objects
+     */
+    public ManaCollection(Set<Mana> pool) {
         for(Mana m : pool) {
-            this.pool[m.getColor().ordinal()] += m.getAmount();
+            this.pool.put(m, m.getAmount());
         }
     }
 
-    /**
-     * Creates mana collection from array of Colors
-     * This constructor uses array of colors, because creating a Mana[] array throws exceptions
-     *
-     * @param colors Array of Colors
-     */
-    public ManaCollection(Color[] colors) {
-        for(Color c : colors) {
-            this.pool[c.ordinal()] += 1;
-        }
-    }
+
 
     /**
      * Gets you mana of a color
@@ -48,7 +48,7 @@ public class ManaCollection {
      * @return amount of mana
      */
     public int getManaOfColorAmount(Color c) {
-        return pool[c.ordinal()];
+        return pool.get(new Mana(c, 1));
     }
 
     /**
@@ -57,7 +57,10 @@ public class ManaCollection {
      * @param amount amount of given mana to be added
      */
     public void addManaOfColor(Color c, int amount) {
-        pool[c.ordinal()] += amount;
+        Mana key = new Mana(c, 1); // create Mana object from color as a key
+        Integer currentAmount = pool.get(key); // if the key was there, it will get a current value, else it gets null
+        // increment current value or add a whole new key with value
+        pool.put(key, currentAmount == null ? amount : amount + currentAmount);
     }
 
     /**
@@ -69,11 +72,13 @@ public class ManaCollection {
     }
 
     /**
-     * Just adds one mana to the int[] pool array
+     * Just adds one mana to the mana collection
      * @param mana Mana to be added
      */
     public void addMana(Mana mana) {
-        pool[mana.getColor().ordinal()] += mana.getAmount();
+        Integer currentAmount = pool.get(mana); // if the key was there, it will get a current value, else it gets null
+        // increment current value or add a whole new key with value
+        pool.put(mana, currentAmount == null ? mana.getAmount() : mana.getAmount() + currentAmount);
     }
 
     /**
@@ -95,28 +100,31 @@ public class ManaCollection {
      */
     public Set<Color> getColors() {
         Set<Color> returnSet = new HashSet<>();
-        for(int i = 0; i < Color.cachedValues().length; i++) {
-            if(pool[i] > 0) {
-                // if the value of the mana is greater than 0, it is added as color to the Set
-                returnSet.add(Color.cachedValues()[i]);
-            }
+        for(Mana key : pool.keySet()) {
+            returnSet.add(key.getColor());
         }
         return returnSet;
     }
 
-    /**
-     * Converts this mana object to a Set of Mana objects and returns that set
-     * Used for purpose of iterating when checking enough mana
-     * @return
-     */
-    public Set<Mana> convertToManaSet() {
+    public Set<Mana> getManaSet() {
+        Set<Mana> returnSet = new HashSet<>();
+        for(Mana key : pool.keySet()) {
+            // in the pool, the mana amounts are contained aside of those Mana keys, in their own Integers
+            // so if you want to obtain a Mana object correctly, you must create new Mana object and pass
+            // the corresponding Integer value from the Map to the constructor. Like this:
+            returnSet.add(new Mana(key.getColor(), pool.get(key)));
+        }
+        return returnSet;
+    }
 
+    public Map<Mana, Integer> getPool() {
+        return pool;
     }
 
     @Override
     public String toString() {
         return "ManaCollection{" +
-                "pool=" + Arrays.toString(pool) +
+                "pool=" + pool.toString() +
                 '}';
     }
 }
