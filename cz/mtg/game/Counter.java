@@ -13,7 +13,7 @@ import cz.mtg.exceptions.RestrictedCounterAmountException;
  */
 public class Counter {
     private int amount;
-    private CounterType counterType;
+    private final CounterType counterType;
 
     /**
      * Creates a counter of given type with given amount

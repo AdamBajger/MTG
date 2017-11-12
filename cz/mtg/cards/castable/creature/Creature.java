@@ -13,6 +13,49 @@ import cz.mtg.game.targets.DamageableTarget;
  *      ---> develop attack mechanics
  */
 public interface Creature extends CastableCard, DamageableTarget {
+
+
+
+
+    /**
+     * Getter for getting actual power of a creature
+     * with all modifiers applied
+     * Actual power can not fall below 0
+     * @return actual power of a creature
+     */
+    int getActualPower();
+
+    /**
+     * This will change the power modifier for the creature
+     * input number is added to the modifier attribute
+     * @param amount a whole number
+     */
+    void modifyPower(int amount);
+
+    /**
+     * Counts actual toughness of a creature, with all bonuses applied
+     * Actual toughness can not fall below 0
+     * @return actual toughness of a creature
+     */
+    int getActualToughness();
+
+    /**
+     * This will change the toughness modifier for the creature
+     * input number is added to the modifier attribute
+     * @param amount a whole number
+     */
+    void modifyToughness(int amount);
+
+    /**
+     * Checks if creature should die.
+     * Checks all circumstances under which creature should die and if any of those circumstances happened,
+     * True is returned. If the creature is okay, false is returned.
+     * @return True if creature should die, False otherwise
+     */
+    default boolean creatureShouldDie(){
+        return getDamageTaken() >= getActualToughness();
+    }
+
     /**
      * Casual check if the creature has summoning sickness
      * do not use this (unless you know what you are doing) in actual checking.
@@ -30,7 +73,7 @@ public interface Creature extends CastableCard, DamageableTarget {
      */
     default boolean hasSummoningSickness() {
         return defaultHasSummoningSickness();
-    };
+    }
 
     /**
      * Trie to add creature to attacking creature group
@@ -42,7 +85,7 @@ public interface Creature extends CastableCard, DamageableTarget {
      * -----------------------------------------
      *  TODO:
      *      Keep in mind that this DOES NOT manage damage itself
-     *      ---> leave that for damage methods {@link Creature#defaultDealDamage() one} and {@link Creature#dealDamage() two}
+     *      ---> leave that for damage methods {@link Creature#dealDamage(DamageableTarget) one} and {@link Creature#dealDamage(DamageableTarget) two}
      */
     default boolean attack(Player whichPlayer) {
         if(this.hasSummoningSickness()) {
@@ -54,17 +97,28 @@ public interface Creature extends CastableCard, DamageableTarget {
             e.printStackTrace();
             return false;
         }
+        // TODO: assign creature for attack
+        // TODO: fire event --> creature attacks
         return true;
 
     }
 
     /**
      * Default method to deal damage
-     * This method actually deals damage to a TARGET from this
+     * This method actually deals damage to a TARGET from this creature
+     * For example when Creature attacks and gets blocked, each of these creatures use this method
+     * to deal damage to each other
      *
      */
-    void defaultDealDamage();
+    default void dealDamage(DamageableTarget target) {
+        target.takeDamage(getActualPower());
+    }
 
-
+    /**
+     * Returns damage taken this turn by this creature
+     * damage taken can not reach negative values
+     * @return damage taken
+     */
+    int getDamageTaken();
 
 }

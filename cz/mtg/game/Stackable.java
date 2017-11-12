@@ -118,6 +118,8 @@ public interface Stackable {
      * This method contains what happens when a card or ability resolves.
      * That means, what happens if the card is on the TOP of the STACK and every player passed its priority
      * without doing anything.
+     * For most Cards (excepts Instants or Sorceries) it means just putting the card on the battlefield
+     * but for abilities and, earlier excluded, instants and sorceries, it means the whole card functionality
      */
     void resolve();
 }

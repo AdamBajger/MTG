@@ -1,5 +1,7 @@
 package cz.mtg.game.targets;
 
+import cz.mtg.exceptions.NegativeNotAllowedException;
+
 /**
  * Well this interface is here to recognize targets that can take damage in any way.
  * Every damageable target should implement methods described here
@@ -19,6 +21,7 @@ public interface DamageableTarget {
     /**
      * This is the default casual method to take damage
      * Every damageable target must implement such method
+     * Damage taken MUST me positive
      * @param damage amount of damage taken
      */
     void defaultTakeDamage(int damage);

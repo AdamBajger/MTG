@@ -1,18 +1,16 @@
 package cz.mtg.cards;
 
 
+import cz.mtg.abilities.AbilityStackable;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
-import cz.mtg.exceptions.InvalidActionException;
 import cz.mtg.exceptions.NegativeNotAllowedException;
 import cz.mtg.exceptions.RestrictedCounterAmountException;
-import cz.mtg.game.CardPlacement;
+import cz.mtg.game.*;
 
-import cz.mtg.game.Counter;
-import cz.mtg.game.CounterType;
-import cz.mtg.game.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Abstract class giving you general functionality of a card in general
@@ -32,6 +30,7 @@ public abstract class AbstractCard implements Card {
     private boolean facedDown;
     private HashMap<CounterType, Counter> counters;
     private @NotNull CardPlacement cardPlacement = CardPlacement.EXILE; // initially card is in exile, outside of the game
+    private LinkedList<AbilityStackable> abilities;
 
 
     /**
@@ -78,6 +77,11 @@ public abstract class AbstractCard implements Card {
     }
     public void flip() {
         facedDown = !facedDown;
+    }
+
+    @Override
+    public LinkedList<AbilityStackable> getAbilities() {
+        return abilities;
     }
 
     @NotNull
@@ -169,7 +173,7 @@ public abstract class AbstractCard implements Card {
      * Generally the card becomes inactive and loses all abilities
      * use thgis when you destroy card or exile it
      */
-    private void clear() {
+    protected void clear() {
         this.facedDown = false;
         this.tapped = false;
         this.counters.clear();

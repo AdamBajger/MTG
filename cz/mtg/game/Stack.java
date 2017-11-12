@@ -24,7 +24,7 @@ import java.util.List;
  *
  */
 public class Stack {
-    private LinkedList<Stackable> spellQueue = new LinkedList<>();
+    private final LinkedList<Stackable> spellQueue = new LinkedList<>();
 
     /**
      * Appends a Stackable object to the spell queue

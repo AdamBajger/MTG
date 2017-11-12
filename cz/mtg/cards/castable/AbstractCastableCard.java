@@ -29,18 +29,17 @@ public abstract class AbstractCastableCard extends AbstractCard implements Casta
     }
 
     /**
-     * This method returns the source Card causing this spell to go on stack
-     *
-     * @return source Card of the spell
+     * This card is its own source. When you ask for source, you ask for a card
+     * In this case this card is retuned
+     * @return the Card itself
      */
     @Override
     public Card getSource() {
-        return null;
+        return this;
     }
 
     /**
      * This method returns mana cost of this castable object
-     *
      * @return mana needed to cast this spell
      */
     @Override

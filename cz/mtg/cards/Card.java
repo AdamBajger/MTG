@@ -1,15 +1,14 @@
 package cz.mtg.cards;
 
-import cz.mtg.abilities.passive.IndestructibleAbility;
+import cz.mtg.abilities.AbilityStackable;
+import cz.mtg.abilities.IndestructibleAbility;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.IndestructibleException;
 import cz.mtg.exceptions.NegativeNotAllowedException;
 import cz.mtg.exceptions.RestrictedCounterAmountException;
-import cz.mtg.game.CardPlacement;
-import cz.mtg.game.Color;
-import cz.mtg.game.CounterType;
-import cz.mtg.game.Player;
+import cz.mtg.game.*;
 
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -89,6 +88,12 @@ public interface Card {
     default Set<Color> getCardColors() {
         return defaultGetCardColors();
     }
+
+    /**
+     * Returns the linked list of abilities this card has
+     * @return LinkedList of Abilities
+     */
+    LinkedList<AbilityStackable> getAbilities();
 
     /**
      * Just a getter that tells you where the card is

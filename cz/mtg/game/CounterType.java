@@ -8,11 +8,12 @@ package cz.mtg.game;
 public enum CounterType {
     CHARGE,
     LEVEL,
+    LOYALTY,
     P_T_COUNTER_POSITIVE, // +1/+1 counters
     P_T_COUNTER_NEGATIVE, // -1/-1 counters
     POISON,
     QUEST,
-    TIME;
+    TIME
 
 
 }

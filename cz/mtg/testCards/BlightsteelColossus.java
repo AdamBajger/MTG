@@ -1,6 +1,6 @@
 package cz.mtg.testCards;
 
-import cz.mtg.abilities.passive.IndestructibleAbility;
+import cz.mtg.abilities.IndestructibleAbility;
 import cz.mtg.cards.castable.Artifact;
 import cz.mtg.cards.castable.creature.Creature;
 import cz.mtg.cards.castable.creature.AbstractCreatureCard;

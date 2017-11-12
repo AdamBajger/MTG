@@ -11,6 +11,7 @@ import java.util.function.Consumer;
  * which can represent Player's mana collection, card's manacost etc.
  * This class controls mana spending, mana burn, mana checking and so on...
  *
+ * This class also provides (or will provide) static methods for converting mana arrays to sets or so...
  * ------------------------------------
  *  TODO
  *      Rework this to work and HashSet, because we will need more Mana types, that just those basic

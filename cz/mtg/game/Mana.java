@@ -11,9 +11,9 @@ import java.util.Objects;
  * Amount of mana stored must NOT reach zero!
  */
 public class Mana {
-    private Color color;
+    private final Color color;
     private int amount = 1;
-    private Class<? extends Stackable> spendableOn = Stackable.class;
+    private final Class<? extends Stackable> spendableOn = Stackable.class;
 
     /**
      * Constructs a mana unit with desired color and amount 1

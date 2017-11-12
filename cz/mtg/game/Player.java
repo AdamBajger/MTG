@@ -1,9 +1,11 @@
 package cz.mtg.game;
 
 import cz.mtg.cards.Card;
+import cz.mtg.exceptions.NegativeNotAllowedException;
 import cz.mtg.game.targets.AttackableTarget;
 import cz.mtg.game.zones.Library;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -23,6 +25,7 @@ public class Player implements AttackableTarget {
     private Game gameAssigned; // this is the game the player participates in
     private int lives;
     private ManaCollection manaPool;
+    private HashMap<CounterType, Integer> counters;
     private boolean priority;
 
     private Deck deck;
@@ -33,6 +36,17 @@ public class Player implements AttackableTarget {
     private LinkedList<Card> graveyard;
     private Set<Card> sideboard;
 
+    public void changeCounterAmountByValue(CounterType key, int amount) {
+        Integer currentAmount = counters.get(key); // if the key was there, it will get a current value, else it gets null
+        if(currentAmount != null && amount + currentAmount < 0)
+            throw new NegativeNotAllowedException("Negative amount of counters not allowed.");
+        // increment current value or add a whole new key with value
+        counters.put(key, currentAmount == null ? amount : amount + currentAmount);
+    }
+
+    public void putCounter(CounterType key) {
+        changeCounterAmountByValue(key, 1);
+    }
 
     public ManaCollection getManaPool() {
         return manaPool;
