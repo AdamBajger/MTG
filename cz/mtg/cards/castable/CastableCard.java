@@ -12,8 +12,4 @@ import java.util.Set;
  */
 public interface CastableCard extends Card, Stackable {
 
-
-
-
-
 }

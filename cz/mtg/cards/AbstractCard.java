@@ -1,8 +1,10 @@
 package cz.mtg.cards;
 
 
-import cz.mtg.abilities.AbilityStackable;
+import cz.mtg.abilities.Ability;
+import cz.mtg.abilities.interfaces.passive.AffectsDestroying;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
+import cz.mtg.exceptions.IndestructibleException;
 import cz.mtg.exceptions.NegativeNotAllowedException;
 import cz.mtg.exceptions.RestrictedCounterAmountException;
 import cz.mtg.game.*;
@@ -30,7 +32,7 @@ public abstract class AbstractCard implements Card {
     private boolean facedDown;
     private HashMap<CounterType, Counter> counters;
     private @NotNull CardPlacement cardPlacement = CardPlacement.EXILE; // initially card is in exile, outside of the game
-    private LinkedList<AbilityStackable> abilities;
+    private LinkedList<Ability> abilities;
 
 
     /**
@@ -56,7 +58,7 @@ public abstract class AbstractCard implements Card {
     public Player getController() {
         return controller;
     }
-    public void setController(Player controller) {
+    public void setController(@NotNull Player controller) {
         this.controller = controller;
     }
 
@@ -80,8 +82,13 @@ public abstract class AbstractCard implements Card {
     }
 
     @Override
-    public LinkedList<AbilityStackable> getAbilities() {
+    public LinkedList<Ability> getAbilities() {
         return abilities;
+    }
+
+    @Override
+    public void addAbility(Ability ability) {
+        abilities.addFirst(ability);
     }
 
     @NotNull
@@ -211,7 +218,15 @@ public abstract class AbstractCard implements Card {
     }
 
     @Override
-    public void defaultDestroy() {
+    public void defaultDestroy() throws IndestructibleException {
+        // check if card is not indestructible
+        for(Ability ability : getAbilities()) {
+            if(ability instanceof AffectsDestroying) {
+                // call the alternative destroy() method provided by the ability
+                ((AffectsDestroying)ability).destroy();
+            }
+        }
+
         clear(); // card loses abilities and counters
         removeCardFromPreviousZone(); // remove the card from previous zone
         getOwner().getGraveyard().push(this);
@@ -222,7 +237,7 @@ public abstract class AbstractCard implements Card {
     /**
      * This method is used in the toString() methods of AbstractCard subclasses to reduce redundancy
      * it appends basic info about card name and other important things to a given StringBuilder
-     * @param sb
+     * @param sb given StringBuilder
      */
     protected void appendBasicInfo(StringBuilder sb) {
         sb.append(this.getClass().getName()).append(" {").append(name);
@@ -231,7 +246,7 @@ public abstract class AbstractCard implements Card {
     /**
      * This method is used in the toString() methods of AbstractCard subclasses to reduce redundancy
      * it appends state info about card state to a given StringBuilder
-     * @param sb
+     * @param sb given StringBuilder
      */
     protected void appendStateInfo(StringBuilder sb) {
         if(isTapped()) {

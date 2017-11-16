@@ -1,6 +1,6 @@
 package cz.mtg.cards;
 
-import cz.mtg.abilities.AbilityStackable;
+import cz.mtg.abilities.Ability;
 import cz.mtg.abilities.IndestructibleAbility;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.IndestructibleException;
@@ -93,7 +93,13 @@ public interface Card {
      * Returns the linked list of abilities this card has
      * @return LinkedList of Abilities
      */
-    LinkedList<AbilityStackable> getAbilities();
+    LinkedList<Ability> getAbilities();
+
+    /**
+     * Adds an ability to the list of abilities the card already has
+     * @param ability ability to be added
+     */
+    void addAbility(Ability ability);
 
     /**
      * Just a getter that tells you where the card is
@@ -135,7 +141,7 @@ public interface Card {
      * places card to GRAVEYARD and clears the card (it loses all abilities)
      * This method is by default called by destroy() method
      */
-    void defaultDestroy();
+    void defaultDestroy() throws IndestructibleException;
 
     /**
      * This is also default method. Unlike the defaultDestroy() method,

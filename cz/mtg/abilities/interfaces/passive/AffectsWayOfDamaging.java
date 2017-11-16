@@ -11,7 +11,7 @@ import cz.mtg.game.targets.DamageableTarget;
  *      infect, defender, wither,
  *
  */
-public interface WayOfDamaging {
+public interface AffectsWayOfDamaging {
     /**
      * This is the alternative damaging method, that will be used
      * whenever a creature with thgis ability will deal damage

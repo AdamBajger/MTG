@@ -1,5 +1,7 @@
 package cz.mtg.cards.castable.creature;
 
+import cz.mtg.abilities.Ability;
+import cz.mtg.abilities.interfaces.passive.AffectsCreatureToughness;
 import cz.mtg.cards.castable.AbstractCastableCard;
 import cz.mtg.game.CardPlacement;
 import cz.mtg.game.CounterType;
@@ -63,12 +65,31 @@ public abstract class AbstractCreatureCard extends AbstractCastableCard implemen
         finalToughness += getCounterAmount(CounterType.P_T_COUNTER_POSITIVE);
         finalToughness -= getCounterAmount(CounterType.P_T_COUNTER_NEGATIVE);
         finalToughness += toughnessModifier;
+
+        // Check for abilities that modify toughness
+        for(Ability ability : this.getAbilities()) {
+            if(ability instanceof AffectsCreatureToughness) {
+                // adds the amount of which the ability changes the toughness
+                finalToughness += ((AffectsCreatureToughness)ability).getToughnessModifier();
+            }
+        }
         return finalToughness;
     }
 
     @Override
     public void modifyToughness(int amount) {
         toughnessModifier += amount;
+    }
+
+    /**
+     * This method MUST be overridden, if there ARE ADDITIONAL EFFECTS, that trigger when the creature RESOLVES
+     * that DOES NOT include effects that trigger when this creature enters battlefield
+     * TODO: check rules --> Is effect that triggers when a creature enters battlefield a spell? Is it counterable?
+     * @return What happens after this creature resolves (goes to the battlefield)
+     */
+    @Override
+    public String getEffectDescription() {
+        return "Puts " + getName() + " on the battlefield.";
     }
 
     public void clear() {

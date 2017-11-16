@@ -53,4 +53,13 @@ public class Stack {
         spellQueue.pop().resolve();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Stack: {");
+        for(Stackable stackable : spellQueue) {
+            sb.append('\n').append("spell: ").append(stackable.toString());
+        }
+        sb.append('\n').append("}").append('\n');
+        return sb.toString();
+    }
 }

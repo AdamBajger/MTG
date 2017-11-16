@@ -1,6 +1,6 @@
 package cz.mtg.abilities;
 
-import cz.mtg.abilities.interfaces.passive.WayOfDamaging;
+import cz.mtg.abilities.interfaces.passive.AffectsWayOfDamaging;
 import cz.mtg.cards.Card;
 import cz.mtg.cards.castable.Planeswalker;
 import cz.mtg.cards.castable.creature.Creature;
@@ -17,7 +17,12 @@ import cz.mtg.game.targets.DamageableTarget;
  *      We haven't even implemented attack/damage system, so it is too soon to implement this
  *      But remember, that this i
  */
-public class InfectAbility extends AbilityPassive implements WayOfDamaging {
+public class InfectAbility extends AbilityPassive implements AffectsWayOfDamaging {
+
+    public InfectAbility(Card source) {
+        super("infect", "This creature deals damage to creatures in the form of -1/-1 counters" +
+                " and to players in the form of poison counters.", source);
+    }
 
     @Override
     public void dealDamage(DamageableTarget target) {
@@ -28,7 +33,7 @@ public class InfectAbility extends AbilityPassive implements WayOfDamaging {
             // put -1/-1 counters to creatures
             ((Creature)target).putCounters(CounterType.P_T_COUNTER_NEGATIVE, ((Creature)getSource()).getActualPower());
         } else if(target instanceof Planeswalker) {
-            ((Planeswalker)target).takeDamage(((Creature)getSource()).getActualPower());
+            target.takeDamage(((Creature)getSource()).getActualPower());
 
         }
     }
