@@ -2,7 +2,6 @@ package cz.mtg.cards.castable;
 
 import cz.mtg.cards.AbstractCard;
 import cz.mtg.cards.Card;
-import cz.mtg.exceptions.InsufficientManaException;
 import cz.mtg.game.*;
 
 import java.util.HashSet;
@@ -43,14 +42,14 @@ public abstract class AbstractCastableCard extends AbstractCard implements Casta
      * @return mana needed to cast this spell
      */
     @Override
-    public Set<Mana> getManCost() {
+    public Set<Mana> getManaCost() {
         return manaCost;
     }
 
     @Override
     public Set<Color> defaultGetCardColors() {
         Set<Color> returnedColors = new HashSet<>();
-        for(Mana m : getManCost()) {
+        for(Mana m : getManaCost()) {
             returnedColors.add(m.getColor());
         }
         return returnedColors;
@@ -60,9 +59,9 @@ public abstract class AbstractCastableCard extends AbstractCard implements Casta
      * Appends info about mana cost to a given string builder
      * @param sb given string builder
      */
-    private void appendManaCostInfo(StringBuilder sb) {
-        sb.append(", ");
+    protected void appendManaCostInfo(StringBuilder sb) {
         sb.append(manaCost);
+        sb.append(", ");
     }
 
     @Override
@@ -70,8 +69,9 @@ public abstract class AbstractCastableCard extends AbstractCard implements Casta
         StringBuilder sb = new StringBuilder();
         appendBasicInfo(sb);
         appendManaCostInfo(sb);
-        appendStateInfo(sb);
 
+        appendStateInfo(sb);
+        sb.append('}');
         return sb.toString();
     }
 

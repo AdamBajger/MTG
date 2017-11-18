@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Mana {
     private final Color color;
     private int amount = 1;
-    private final Class<? extends Stackable> spendableOn = Stackable.class;
+    private final Class<? extends ConsumesMana> spendableOn = ConsumesMana.class;
 
     /**
      * Constructs a mana unit with desired color and amount 1
@@ -66,8 +66,8 @@ public class Mana {
      * @param castSpell spell being cast
      * @return True/False
      */
-    public boolean canBeSpentOn(Stackable castSpell) {
-        return spendableOn == Stackable.class || castSpell.getClass().isInstance(spendableOn);
+    public boolean canBeSpentOn(ConsumesMana castSpell) {
+        return spendableOn == ConsumesMana.class || castSpell.getClass().isInstance(spendableOn);
     }
 
     @Override

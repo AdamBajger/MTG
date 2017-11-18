@@ -1,5 +1,6 @@
 package cz.mtg.testCards;
 
+import cz.mtg.abilities.Ability;
 import cz.mtg.abilities.IndestructibleAbility;
 import cz.mtg.abilities.InfectAbility;
 import cz.mtg.cards.castable.Artifact;

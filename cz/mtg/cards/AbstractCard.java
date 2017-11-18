@@ -30,9 +30,9 @@ public abstract class AbstractCard implements Card {
     private @NotNull Player controller;
     private boolean tapped;
     private boolean facedDown;
-    private HashMap<CounterType, Counter> counters;
+    private HashMap<CounterType, Counter> counters = new HashMap<>();
     private @NotNull CardPlacement cardPlacement = CardPlacement.EXILE; // initially card is in exile, outside of the game
-    private LinkedList<Ability> abilities;
+    private LinkedList<Ability> abilities = new LinkedList<>();
 
 
     /**
@@ -172,7 +172,11 @@ public abstract class AbstractCard implements Card {
     }
     @Override
     public int getCounterAmount(CounterType cType) {
-        return counters.get(cType).getAmount();
+        Counter c = counters.get(cType);
+        // check if the counter is even there to avoid getting NullPointerException later
+        if(c == null) {
+            return 0;
+        } else return counters.get(cType).getAmount();
     }
 
     /**
@@ -240,7 +244,7 @@ public abstract class AbstractCard implements Card {
      * @param sb given StringBuilder
      */
     protected void appendBasicInfo(StringBuilder sb) {
-        sb.append(this.getClass().getName()).append(" {").append(name);
+        sb.append(this.getClass().getName()).append(" {\nname: ").append(name).append(", ");
     }
 
     /**
@@ -249,15 +253,30 @@ public abstract class AbstractCard implements Card {
      * @param sb given StringBuilder
      */
     protected void appendStateInfo(StringBuilder sb) {
+
+        sb.append("stateInfo: {\n" +
+                "tapped: ");
         if(isTapped()) {
-            sb.append(", tapped");
+            sb.append("true");
         } else {
-            sb.append(", untapped");
+            sb.append("false");
         }
+        sb.append(", facedDown: ");
         if(isFacedDown()) {
-            sb.append(", faced down");
+            sb.append("true");
+        } else {
+            sb.append("false");
         }
-        sb.append(", card is in ").append(getCardPlacement());
+        sb.append(", cardPlacement: ").append(getCardPlacement());
+        sb.append(", counters: {");
+        for (CounterType cType : counters.keySet()) {
+            sb.append(cType).append(": ").append(counters.get(cType)).append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length()); // to delete the last ", " from loop above
+
+        sb.append("\n" +
+                "}");
+
     }
 
     @Override

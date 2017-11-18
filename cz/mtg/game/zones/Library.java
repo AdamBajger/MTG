@@ -1,6 +1,8 @@
 package cz.mtg.game.zones;
 
 import cz.mtg.cards.Card;
+import cz.mtg.exceptions.EmptyDeckException;
+import cz.mtg.game.Deck;
 
 import java.util.*;
 
@@ -22,6 +24,18 @@ import java.util.*;
  */
 public class Library {
     private final LinkedList<Card> cards = new LinkedList<>();
+
+    /**
+     * Tries to initialize the library with a given deck and shuffles it.
+     * @param deck given Deck
+     * @throws EmptyDeckException when an empty deck is provided
+     */
+    public void initializeLibrary(Deck deck) throws EmptyDeckException {
+        Collection<Card> mainDeck = deck.getMainDeck();
+        if(mainDeck == null || mainDeck.size() == 0) throw new EmptyDeckException(deck);
+        cards.addAll(deck.getMainDeck());
+        shuffle();
+    }
 
     /**
      * Method to shuffle Library
@@ -101,5 +115,7 @@ public class Library {
     }
 
 
-
+    public int getNumberOfCards() {
+        return cards.size();
+    }
 }

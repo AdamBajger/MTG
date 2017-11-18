@@ -45,6 +45,10 @@ public class Stack {
         }
     }
 
+    public boolean isEmpty() {
+        return spellQueue.isEmpty();
+    }
+
     /**
      * This will take the top card on the stack and applies its effects that were assigned by its casting
      * this will refresh other players' priority and everyone can react

@@ -3,10 +3,7 @@ package cz.mtg.cards.castable.creature;
 import cz.mtg.abilities.Ability;
 import cz.mtg.abilities.interfaces.passive.AffectsCreatureToughness;
 import cz.mtg.cards.castable.AbstractCastableCard;
-import cz.mtg.game.CardPlacement;
-import cz.mtg.game.CounterType;
-import cz.mtg.game.Mana;
-import cz.mtg.game.Player;
+import cz.mtg.game.*;
 
 import java.util.Set;
 
@@ -89,7 +86,7 @@ public abstract class AbstractCreatureCard extends AbstractCastableCard implemen
      */
     @Override
     public String getEffectDescription() {
-        return "Puts " + getName() + " on the battlefield.";
+        return "Puts " + getName() + " on the battlefield. ";
     }
 
     public void clear() {
@@ -131,5 +128,31 @@ public abstract class AbstractCreatureCard extends AbstractCastableCard implemen
     @Override
     public int getDamageTaken() {
         return damageTaken;
+    }
+
+    private void appendCreatureInfo(StringBuilder sb) {
+        sb.append("creatureState: {\n" +
+                "hasSummoningSickness: ").append(hasSummoningSickness());
+
+        sb.append(", power: ").append(getActualPower());
+        sb.append(", toughness: ").append(getActualToughness());
+
+        sb.append(", cardText: \'").append(getEffectDescription());
+        for (Ability ability : getAbilities()) {
+            sb.append(ability.getTextRepresentation());
+        }
+
+        sb.append("\'\n}");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        appendBasicInfo(sb);
+        appendManaCostInfo(sb);
+        appendCreatureInfo(sb);
+        appendStateInfo(sb);
+        sb.append('}');
+        return sb.toString();
     }
 }

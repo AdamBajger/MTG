@@ -1,5 +1,8 @@
 package cz.mtg.game;
 
+import cz.mtg.cards.Card;
+
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -12,10 +15,60 @@ import java.util.Set;
  *
  */
 public class Deck {
-    private Set<GameFormat> suitableFormats;
-
+    //private final Player owner;
     // Library cards
-
+    private final Set<Card> mainDeck;
 
     // sideboard cards
+    private Set<Card> sideboard;
+
+    public Deck(/*Player owner,*/ Set<Card> mainDeck, Set<Card> sideboard) {
+        //this.owner = owner;
+        this.mainDeck = mainDeck;
+        this.sideboard = sideboard;
+    }
+
+    public Set<Card> getMainDeck() {
+        return mainDeck;
+    }
+
+    public boolean addCardToMainDeck(Card card) {
+        return mainDeck.add(card);
+    }
+
+    public boolean addCardsToMainDeck(Collection<Card> cards) {
+        return mainDeck.addAll(cards);
+    }
+
+    public boolean removeCardFromMainDeck() {
+        // TODO: implement method --> just coolection adding/removing
+        return false;
+    }
+
+    public boolean removeCardsFromMainDeck() {
+        // TODO: implement method --> just coolection adding/removing
+        return false;
+    }
+
+    public Set<Card> getSideboard() {
+        return sideboard;
+    }
+
+    public boolean addCardToSideboard(Card card) {
+        return sideboard.add(card);
+    }
+
+    public boolean addCardsToSideboard(Collection<Card> cards) {
+        return sideboard.addAll(cards);
+    }
+
+    public boolean removeCardFromSideboard() {
+        // TODO: implement method --> just coolection adding/removing
+        return false;
+    }
+
+    public boolean removeCardsFromSideboard() {
+        // TODO: implement method --> just coolection adding/removing
+        return false;
+    }
 }

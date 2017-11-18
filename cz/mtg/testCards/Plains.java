@@ -5,6 +5,7 @@ import cz.mtg.cards.lands.AbstractLandCard;
 import cz.mtg.game.Color;
 import cz.mtg.game.Player;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ public class Plains extends AbstractLandCard {
      */
     public Plains(Player owner) {
         super("Plains", owner);
-        addAbility(new TapForManaAbility());
+        addAbility(new TapForManaAbility(this, Collections.emptySet()));
     }
 
     @Override

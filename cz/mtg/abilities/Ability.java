@@ -43,6 +43,12 @@ public abstract class Ability {
         return effectDescription;
     }
 
+    public String getTextRepresentation() {
+        if(keyWord != null && keyWord.length() > 0) {
+            return keyWord + " ";
+        } else return effectDescription;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,5 +62,14 @@ public abstract class Ability {
     public int hashCode() {
 
         return Objects.hash(keyWord, getEffectDescription());
+    }
+
+    @Override
+    public String toString() {
+        return "Ability: {" +
+                "keyWord: '" + keyWord + '\'' +
+                ", effectDescription: '" + effectDescription + '\'' +
+                ", source: " + source +
+                '}';
     }
 }

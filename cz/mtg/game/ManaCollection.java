@@ -39,7 +39,13 @@ public class ManaCollection {
         }
     }
 
-
+    public static ManaCollection copyOf(ManaCollection m) {
+        ManaCollection mm = new ManaCollection();
+        for(Mana mana : m.pool.keySet()) {
+            mm.addMana(mana);
+        }
+        return mm;
+    }
 
     /**
      * Gets you mana of a color
@@ -49,7 +55,13 @@ public class ManaCollection {
      * @return amount of mana
      */
     public int getManaOfColorAmount(Color c) {
-        return pool.get(new Mana(c, 1));
+        // check if that mana is even there
+        Integer checkedMana = pool.get(new Mana(c, 1));
+        if(checkedMana == null) {
+            return 0;
+        } else {
+            return checkedMana;
+        }
     }
 
     /**
@@ -120,6 +132,15 @@ public class ManaCollection {
 
     public Map<Mana, Integer> getPool() {
         return pool;
+    }
+
+    /**
+     * This method is used to spend specific amount of mana from this manapool
+     *
+     * @param cost
+     */
+    public void spendMana(Set<Mana> cost) {
+
     }
 
     @Override

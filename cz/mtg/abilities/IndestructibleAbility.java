@@ -7,7 +7,7 @@ import cz.mtg.exceptions.IndestructibleException;
 public class IndestructibleAbility extends AbilityPassive implements AffectsDestroying {
 
     public IndestructibleAbility(Card source) {
-        super("indestructible",source.getName() + " is indestructible.", source);
+        super("indestructible",source.getName() + " is indestructible. ", source);
     }
     @Override
     public void destroy() throws IndestructibleException {

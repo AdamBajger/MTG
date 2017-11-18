@@ -3,9 +3,6 @@ Abychom nebyli podepsaní pod každou třídou našim pravým jménem :D
 
 Hlavně při psaní myslet na to, že to musí být hratelné ve více hráčích
 
-Pokud nevíš kde začít, zkus začít implementovat java.io.Serializable tak aby každá se každá instance dala uložit jako soubor :)
-Během toho snad porozumíš struktuře projektu a spoustu věcí sám upravíš.
-
 Musí se vymyslet jak budeme řešit typy karet, myšleno Human Knight, Goblin Warrior, Elf warrior ally, Kor, Spirit, Human, etc
 Jestli to udělat přes pole výčtů Enum[], nebo přes pole řetězců String[],
 interface pro každý typ není možný, protože by to nešlo upravovat během hry.
@@ -19,23 +16,11 @@ při vstupu karty na hrací pole, nebo jindy podle karty.
 Zároveň každá akce hráče bude spouštět nějaký event. Například Event.UPKEEP, pro cíl Player p, to znamená, že když hráč p
 začne nové kolo a začne mu upkeep fáze, spustí se všechny akce zaregistrované pro Event.UPKEEP a týkající se hráče p.
 
-Navrhnout systém popisu aktivovatelných schopností --> nabízí se rozdělení na třídu Ability, která by spravovala požadavky na vykonání schopnosti,
-měla by metodu resolve, která by provedla efekt schopnosti --> umístila by jej na stack.
-Statické schopnosti typu Haste, Vigilance apod lze implementovat jako rozhraní
-
-Pořádně implementovat NegativeNotAllowedException
-
 Pořádně si rozmyslet, jak implementovat třídu Counter, jestli pro každý typ counteru přidat výčet do CounterType, nebo jen rozdělit
 countery na +1/+1 counter, -1/-1 counter a pojmenované countery, které by si nesly atribut Name jako String...
 Zvážit co je výhodnější, zatím tam je výčet ale to se dá upravit
 
-Rozmyslet si, jestli metody pro zamíchání karty do balíčku definovat ve třídě AbstractCard nebo ve třídě Player,
-NEBO jestli rovnou nevytvořit novou třídu Library, která tyto metody bude definovat, a ve třídě AbstractCard jen odkazovat
-na tyto metody... asi udělám třídu Library, kdyžtak mě zastav :D vrátit to zpět taky nebude problém :D
-
-Předělat Mana object, dodělat hashCode() a equals() tak aby dvě many byly porovnávány podle color a spendableOn parametru,
-nikoli podle množství. Předělat ManaCollection tak, aby vnitřeně pracovala se Setem, protože se v mana poolu může vyskytovat
-více druhů many než jen základní barvy (liší se podle toho, za co je můžeš utratit).
+Předělat Mana object, dodělat hashCode() a equals() tak aby dvě many byly porovnávány podle barvy a toho, za co je možné je utratit.
 Při porovnávání manacostu a zjišťování, jestli má hráč dostatek many, uplatňovat to,
 že hráč danou manu může utratit jen za určité spelly ---> vymyslet to tak, aby si hráč sám mohl zvolit kterou manu utrati? :D
 Zatím, nepodstatné, nechat automaticky tak, že omezená mana je utracena přednostně, pokud možno...
@@ -44,3 +29,10 @@ KLÍČOVÝ BOD:
 Vymyslet jakým způsobem se bude přidělovat hráčům priorita, tak aby pokaždé, když něco přijde na stack, každů hráč se mohl ohradit
 a reagovat akcí. Resp. pokaždé když hráč něco zahraje, všichni hráči dostanou prioritu a v daném pořadí mohou reagovat
 tak jak je popsáno v pravidlech - u rozhranní Stack myslím je odkaz
+
+KLÍČOVÝ BOD:
+Předělat toString() metody
+Je to katastrofa :D :D :D, sry za odbytou práci - Adam
+
+KLÍČOVÝ BOD:
+Implementovat java.io.Serializable tak aby každá se každá instance dala uložit jako soubor

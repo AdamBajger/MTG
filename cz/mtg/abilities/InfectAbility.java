@@ -21,7 +21,7 @@ public class InfectAbility extends AbilityPassive implements AffectsWayOfDamagin
 
     public InfectAbility(Card source) {
         super("infect", "This creature deals damage to creatures in the form of -1/-1 counters" +
-                " and to players in the form of poison counters.", source);
+                " and to players in the form of poison counters. ", source);
     }
 
     @Override

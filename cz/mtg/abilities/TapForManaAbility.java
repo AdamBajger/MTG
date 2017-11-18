@@ -3,8 +3,8 @@ package cz.mtg.abilities;
 import cz.mtg.cards.Card;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.InsufficientManaException;
+import cz.mtg.game.ConsumesMana;
 import cz.mtg.game.Mana;
-import cz.mtg.game.ManaCollection;
 
 import java.util.Set;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * Also abilities of creatures and artifacts that generate mana are involved here
  * Every permanent card that gives you mana by tapping has this ability
  */
-public class TapForManaAbility extends Ability {
+public class TapForManaAbility extends Ability implements ConsumesMana {
     private Set<Mana> cost;
 
     /**
@@ -25,22 +25,9 @@ public class TapForManaAbility extends Ability {
         this.cost = cost;
     }
 
-    /**
-     * This method checks if a given player has enough mana to cast this
-     * The casting player is always the owner of the casted card or owner of the casting source
-     * @return True if there is enough mana. False otherwise
-     */
-    boolean enoughMana() {
-        ManaCollection checkedManaPool = getSource().getController().getManaPool();
-
-        // for each mana color in manaCost, check if there is enough mana of that color in checkedManaPool
-        for(Mana m : cost) {
-            if(!(checkedManaPool.getManaOfColorAmount(m.getColor()) >= m.getAmount())) {
-                return false;
-            }
-        }
-        // no insufficient mana found ---> return true
-        return true;
+    @Override
+    public Set<Mana> getManaCost() {
+        return null;
     }
 
     /**
@@ -48,7 +35,7 @@ public class TapForManaAbility extends Ability {
      * No one can respond to this action, this action thus cannot be countered
      */
     public void tapForMana() throws AlreadyTappedOrUntappedException, InsufficientManaException {
-        if(!enoughMana()) throw new InsufficientManaException();
+        if(notEnoughMana(this)) throw new InsufficientManaException();
         getSource().tap();
         getSource().getController().getManaPool().spendMana(cost);
     }
