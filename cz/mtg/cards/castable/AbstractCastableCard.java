@@ -3,6 +3,8 @@ package cz.mtg.cards.castable;
 import cz.mtg.cards.AbstractCard;
 import cz.mtg.cards.Card;
 import cz.mtg.game.*;
+import cz.mtg.game.mana.Mana;
+import cz.mtg.game.mana.ManaSet;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,13 +18,13 @@ import java.util.Set;
  *      decide how to implement mana cost, which data structure to use!!!
  */
 public abstract class AbstractCastableCard extends AbstractCard implements CastableCard {
-    private final Set<Mana> manaCost;
+    private final ManaSet manaCost;
 
     /**
      * Creates a named card with given manacost
      * @param name desired name
      */
-    public AbstractCastableCard(String name, Player owner, Set<Mana> manaCost) {
+    public AbstractCastableCard(String name, Player owner, ManaSet manaCost) {
         super(name, owner);
         this.manaCost = manaCost;
     }
@@ -42,7 +44,7 @@ public abstract class AbstractCastableCard extends AbstractCard implements Casta
      * @return mana needed to cast this spell
      */
     @Override
-    public Set<Mana> getManaCost() {
+    public ManaSet getManaCost() {
         return manaCost;
     }
 

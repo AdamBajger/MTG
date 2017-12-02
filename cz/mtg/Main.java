@@ -1,62 +1,62 @@
 package cz.mtg;
 
+import cz.mtg.abilities.Ability;
+import cz.mtg.abilities.TapForManaAbility;
 import cz.mtg.cards.Card;
+import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.DeckNotAcceptedException;
 import cz.mtg.exceptions.InsufficientManaException;
 import cz.mtg.exceptions.InvalidActionException;
 import cz.mtg.game.*;
+import cz.mtg.game.mana.BasicMana;
+import cz.mtg.game.mana.Mana;
+import cz.mtg.game.mana.ManaSet;
 import cz.mtg.testCards.BlightsteelColossus;
-import cz.mtg.testCards.Plains;
+import cz.mtg.testCards.Island;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Game mainGame = new Game(GameFormat.TEST);
-
         Player adam = new Player("Adam");
-        adam.prepareForGame(mainGame);
-        try {
-            adam.takeDeck(new Deck(new HashSet<Card>(Arrays.asList(new Plains(adam))), Collections.emptySet()));
-        } catch (DeckNotAcceptedException e) {
-            e.printStackTrace();
-        }
-
-        Deck newDeck = new Deck( new HashSet<>(), new HashSet<>());
-
-        BlightsteelColossus blightsteelColossus = new BlightsteelColossus(adam);
+        Card island = new Island(adam);
+        TapForManaAbility tapForMana = new TapForManaAbility(island, new ManaSet(), new ManaSet(new HashSet<>(Arrays.asList(new BasicMana(island, Color.RED), new BasicMana(island, Color.BLUE)))));
 
 
         try {
-            blightsteelColossus.cast();
-        } catch (InsufficientManaException | InvalidActionException e) {
+            tapForMana.tapForMana();
+            island.untap();
+            tapForMana.tapForMana();
+            island.untap();
+            tapForMana.tapForMana();
+            island.untap();
+            tapForMana.tapForMana();
+            island.untap();
+            tapForMana.tapForMana();
+        } catch (AlreadyTappedOrUntappedException | InsufficientManaException e) {
             e.printStackTrace();
         }
-        System.out.println(mainGame.getSpellStack().toString());
-        adam.getManaPool().addManaOfColor(Color.COLORLESS, 12);
+        // print info about player adter 1st usage of tapMana
+        System.out.println(adam.toString());
+
+        //---------------------------------------
+        TapForManaAbility expensiveTapForMana = new TapForManaAbility(island,
+                new ManaSet(new HashSet<>(Arrays.asList( new BasicMana(6, island, Color.RED), new BasicMana(5, island, Color.BLUE)))),
+                new ManaSet(new HashSet<>(Collections.singletonList(new BasicMana(4, island, Color.GREEN)))));
 
         try {
-            blightsteelColossus.cast();
-        } catch (InsufficientManaException | InvalidActionException e) {
+            island.untap();
+            expensiveTapForMana.tapForMana();
+        } catch (AlreadyTappedOrUntappedException | InsufficientManaException e) {
             e.printStackTrace();
         }
-        // print info
-        System.out.println(mainGame.getSpellStack().toString());
-        //System.out.println(mainGame.getBattlefield().toString());
-        // cast card
-        if(mainGame.getSpellStack().isEmpty()) {
-            System.out.println("Spell stack is empty. ");
-        } else {
-            mainGame.getSpellStack().resolveNext();
-        }
-        // print new info
-        System.out.println(mainGame.getSpellStack().toString());
-        //System.out.println(mainGame.getBattlefield().toString());
+
+        System.out.println(adam.toString());
+
 
     }
 }

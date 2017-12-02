@@ -43,9 +43,9 @@ public interface Stackable extends ConsumesMana {
      *
      */
     default void cast() throws InsufficientManaException, InvalidActionException {
-        if(notEnoughMana(this)) {
+        if(getSource().getController().notEnoughMana(this)) {
             // not enough mana
-            throw new InsufficientManaException();
+            throw new InsufficientManaException("Not enough mana.");
         }
 
         if(!additionalCastConditionsCheck()) {

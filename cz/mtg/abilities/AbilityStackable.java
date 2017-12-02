@@ -1,8 +1,7 @@
 package cz.mtg.abilities;
 
 import cz.mtg.cards.Card;
-import cz.mtg.exceptions.InsufficientManaException;
-import cz.mtg.game.ManaCollection;
+import cz.mtg.game.mana.ManaPool;
 import cz.mtg.game.Stackable;
 
 /**
@@ -12,7 +11,7 @@ import cz.mtg.game.Stackable;
  */
 public abstract class AbilityStackable extends Ability implements Stackable {
 
-    private final ManaCollection cost;
+    private final ManaPool cost;
 
     /**
      * Constructs a castable activable ability, with activation cost.
@@ -24,16 +23,16 @@ public abstract class AbilityStackable extends Ability implements Stackable {
      * @param source source card containing this ability instance
      * @param cost how much it costs to activate this ability
      */
-    public AbilityStackable(String keyWord, String effectDescription, Card source, ManaCollection cost) {
+    public AbilityStackable(String keyWord, String effectDescription, Card source, ManaPool cost) {
         super(keyWord, effectDescription, source);
         this.cost = cost;
     }
 
     /**
      * I will not repeat myself...
-     * @see AbilityStackable#AbilityStackable(String, String, Card, ManaCollection)
+     * @see AbilityStackable#AbilityStackable(String, String, Card, ManaPool)
      */
-    public AbilityStackable(String effectDescription, Card source, ManaCollection cost) {
+    public AbilityStackable(String effectDescription, Card source, ManaPool cost) {
         super(effectDescription, source);
         this.cost = cost;
     }

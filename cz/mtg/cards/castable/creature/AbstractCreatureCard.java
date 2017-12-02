@@ -4,8 +4,7 @@ import cz.mtg.abilities.Ability;
 import cz.mtg.abilities.interfaces.passive.AffectsCreatureToughness;
 import cz.mtg.cards.castable.AbstractCastableCard;
 import cz.mtg.game.*;
-
-import java.util.Set;
+import cz.mtg.game.mana.ManaSet;
 
 /**
  * This class is here to allow PRIVATE attributes for creature
@@ -33,7 +32,7 @@ public abstract class AbstractCreatureCard extends AbstractCastableCard implemen
      * @param power Power of the creature
      * @param toughness Toughness of the creature
      */
-    public AbstractCreatureCard(String name, Player owner, Set<Mana> manaCost, int power, int toughness) {
+    public AbstractCreatureCard(String name, Player owner, ManaSet manaCost, int power, int toughness) {
         super(name, owner, manaCost);
         this.power = power;
         this.toughness = toughness;

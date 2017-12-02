@@ -3,14 +3,15 @@ package cz.mtg.game;
 import cz.mtg.cards.Card;
 import cz.mtg.exceptions.DeckNotAcceptedException;
 import cz.mtg.exceptions.EmptyDeckException;
+import cz.mtg.exceptions.InsufficientManaException;
 import cz.mtg.exceptions.NegativeNotAllowedException;
+import cz.mtg.game.mana.Mana;
+import cz.mtg.game.mana.ManaPool;
+import cz.mtg.game.mana.ManaSet;
 import cz.mtg.game.targets.AttackableTarget;
 import cz.mtg.game.zones.Library;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class contains player
@@ -20,14 +21,11 @@ import java.util.Set;
  * is stored as an attribute
  */
 public class Player implements AttackableTarget {
-    // Game Constants for different mods
-    public static final int DEFAULT_LIVES_CLASSIC = 20;
-    public static final int DEFAULT_LIVES_EDH = 40;
 
-    private String name;
+    private final String name;
     private Game gameAssigned; // this is the game the player participates in
     private int lives;
-    private ManaCollection manaPool;
+    private ManaPool manaPool;
     private HashMap<CounterType, Integer> counters;
     private boolean priority;
 
@@ -43,7 +41,7 @@ public class Player implements AttackableTarget {
         this.name = name;
 
 
-        this.manaPool = new ManaCollection();
+        this.manaPool = new ManaPool();
         this.counters = new HashMap<>();
         this.priority = false;
         this.library = new Library();
@@ -128,8 +126,28 @@ public class Player implements AttackableTarget {
         changeCounterAmountByValue(key, 1);
     }
 
-    public ManaCollection getManaPool() {
-        return manaPool;
+    public boolean notEnoughMana(ConsumesMana spell) {
+        return manaPool.notEnoughMana(spell);
+    }
+
+    public boolean spendMana(Mana mana, ConsumesMana spell) throws InsufficientManaException {
+        return manaPool.spendMana(mana, spell);
+    }
+
+    public void spendMana(ManaSet mana, ConsumesMana spell) throws InsufficientManaException {
+        manaPool.spendMana(mana, spell);
+    }
+
+    public boolean addMana(Mana mana) {
+        return manaPool.addMana(mana);
+    }
+
+    /**
+     * Add all mana objects in a mana collection
+     * @param manaCol given mana collection
+     */
+    public void addAllMana(ManaSet manaCol) {
+        manaPool.addAllMana(manaCol);
     }
 
     public Game getGameAssigned() {
@@ -152,9 +170,41 @@ public class Player implements AttackableTarget {
         return library;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public HashMap<CounterType, Integer> getCounters() {
+        return counters;
+    }
+
+    public boolean hasPriority() {
+        return priority;
+    }
 
     @Override
     public void defaultTakeDamage(int damage) {
         this.lives -= damage;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", gameAssigned=" + gameAssigned +
+                ", lives=" + lives +
+                ", priority=" + priority +
+                ",\n manaPool=" + manaPool +
+                ",\n counters=" + counters +
+                ",\n deck=" + deck +
+                ",\n library=" + library +
+                ",\n hand=" + hand +
+                ",\n graveyard=" + graveyard +
+                ",\n sideboard=" + sideboard +
+                '}';
     }
 }

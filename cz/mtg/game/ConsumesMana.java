@@ -1,8 +1,8 @@
 package cz.mtg.game;
 
 import cz.mtg.cards.Card;
-
-import java.util.Set;
+import cz.mtg.game.mana.Mana;
+import cz.mtg.game.mana.ManaSet;
 
 /**
  * This interface is here to wrap around Stackable and non-Stackable abilities.
@@ -20,26 +20,7 @@ public interface ConsumesMana {
      * This method returns mana cost of this castable object
      * @return mana needed to cast this spell
      */
-    Set<Mana> getManaCost();
-
-    /**
-     * This method checks if a given player has enough mana to cast this
-     * The casting player is always the owner of the casted card or owner of the casting source
-     * In every Mana check also a conditions must be checked
-     * @return True if there is enough mana. False otherwise
-     */
-    default boolean notEnoughMana(ConsumesMana spell) {
-        ManaCollection checkedManaPool = ManaCollection.copyOf(getSource().getController().getManaPool());
-        Set<Mana> manaCost = getManaCost();
-        // for each mana color in manaCost, check if there is enough mana of that color in checkedManaPool
-        for(Mana m : manaCost) {
-            if(checkedManaPool.getManaOfColorAmount(m.getColor()) <= m.getAmount()) {
-                return true;
-            }
-        }
-        // no insufficient mana found ---> return true
-        return false;
-    }
+    ManaSet getManaCost();
 
     /**
      * By default this card returns the controller of card causing this spell to go on stack
@@ -50,7 +31,9 @@ public interface ConsumesMana {
         return getSource().getController();
     }
 
-
+    default boolean manaCanBeSpendOnThis(Mana mana) {
+        return true;
+    }
 
 
 
