@@ -1,5 +1,6 @@
 package cz.mtg.testCards;
 
+import cz.mtg.cards.Card;
 import cz.mtg.cards.lands.basic.AbstractBasicLandCard;
 import cz.mtg.game.Color;
 import cz.mtg.game.Player;

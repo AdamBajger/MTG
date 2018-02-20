@@ -20,11 +20,8 @@ při vstupu karty na hrací pole, nebo jindy podle karty.
 Zároveň každá akce hráče bude spouštět nějaký event. Například Event.UPKEEP, pro cíl Player p, to znamená, že když hráč p
 začne nové kolo a začne mu upkeep fáze, spustí se všechny akce zaregistrované pro Event.UPKEEP a týkající se hráče p.
 
-Navrhnout systém popisu aktivovatelných schopností --> nabízí se rozdělení na třídu Ability, která by spravovala požadavky na vykonání schopnosti,
-měla by metodu resolve, která by provedla efekt schopnosti --> umístila by jej na stack.
-Statické schopnosti typu Haste, Vigilance apod lze implementovat jako rozhraní
-
-Pořádně implementovat NegativeNotAllowedException
+Implement the target validation in every place the targeting happens. It must still allow global operations "destroy all"
+or "deal damage to all".
 
 KLÍČOVÝ BOD:
 Vymyslet jakým způsobem se bude přidělovat hráčům priorita, tak aby pokaždé, když něco přijde na stack, každů hráč se mohl ohradit

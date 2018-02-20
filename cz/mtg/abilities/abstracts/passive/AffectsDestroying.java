@@ -1,4 +1,4 @@
-package cz.mtg.abilities.interfaces.passive;
+package cz.mtg.abilities.abstracts.passive;
 
 import cz.mtg.cards.Card;
 import cz.mtg.exceptions.IndestructibleException;

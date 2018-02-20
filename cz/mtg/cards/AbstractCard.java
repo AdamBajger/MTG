@@ -1,38 +1,36 @@
 package cz.mtg.cards;
 
 
-import cz.mtg.abilities.Ability;
-import cz.mtg.abilities.interfaces.passive.AffectsDestroying;
-import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
-import cz.mtg.exceptions.IndestructibleException;
-import cz.mtg.exceptions.NegativeNotAllowedException;
-import cz.mtg.exceptions.RestrictedCounterAmountException;
+import cz.mtg.game.Source;
+import cz.mtg.abilities.abstracts.Ability;
+import cz.mtg.abilities.abstracts.passive.AffectsTargeting;
+import cz.mtg.exceptions.*;
 import cz.mtg.game.*;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Abstract class giving you general functionality of a card in general
- * Initially every card starts in exile, as it is outside of the game.
+ * Initially every card starts in defaultExile, as it is outside of the game.
  *
  * ------------------------------
- *  TODO:
- *      Complete the implementation of counters on this card
- *      implement methods with TODO comment
+ *
  */
 public abstract class AbstractCard implements Card {
 
     private final String name;
-    private final @NotNull Player owner;
-    private @NotNull Player controller;
+    private final Player owner;
+    private Player controller;
     private boolean tapped;
     private boolean facedDown;
-    private HashMap<CounterType, Counter> counters = new HashMap<>();
-    private @NotNull CardPlacement cardPlacement = CardPlacement.EXILE; // initially card is in exile, outside of the game
-    private LinkedList<Ability> abilities = new LinkedList<>();
+    private final HashMap<CounterType, Counter> counters = new HashMap<>();
+    private @NotNull CardPlacement cardPlacement = CardPlacement.INIT; // initially card is in defaultExile, outside of the game
+    private final LinkedList<Ability> abilities = new LinkedList<>();
 
 
     /**
@@ -41,7 +39,7 @@ public abstract class AbstractCard implements Card {
      * @param name Name for the newly constructed card
      * @param owner Owner of the Card
      */
-    public AbstractCard(String name, @NotNull Player owner) {
+    public AbstractCard(String name, Player owner) {
         this.name = name;
         this.owner = owner;
         this.controller = owner;
@@ -50,15 +48,13 @@ public abstract class AbstractCard implements Card {
     public String getName() {
         return name;
     }
-    @NotNull
     public Player getOwner() {
         return owner;
     }
-    @NotNull
     public Player getController() {
         return controller;
     }
-    public void setController(@NotNull Player controller) {
+    public void setController(Player controller) {
         this.controller = controller;
     }
 
@@ -82,8 +78,8 @@ public abstract class AbstractCard implements Card {
     }
 
     @Override
-    public LinkedList<Ability> getAbilities() {
-        return abilities;
+    public List<Ability> getAbilities() {
+        return Collections.unmodifiableList(abilities);
     }
 
     @Override
@@ -91,10 +87,24 @@ public abstract class AbstractCard implements Card {
         abilities.addFirst(ability);
     }
 
-    @NotNull
     @Override
-    public CardPlacement getCardPlacement() {
-        return cardPlacement;
+    public boolean removeAbility(Ability ability) {
+        return abilities.remove(ability);
+    }
+
+
+    @Override
+    public boolean canBeTargetOfSource(Source source) {
+        for(Ability ability : getAbilities()) {
+            // check for abilities that affect targeting
+            if(ability instanceof AffectsTargeting) {
+                if(!((AffectsTargeting)ability).canBeTargetOfSource(source)) {
+                    // if a card can not be a target of the source
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -104,71 +114,43 @@ public abstract class AbstractCard implements Card {
      * Use this to keep track of where the card is
      * @param cardPlacement Where you want to put the card
      */
-    protected void setCardPlacement(@NotNull CardPlacement  cardPlacement) {
+    @Override
+    public void setCardPlacement(@NotNull CardPlacement cardPlacement) {
         this.cardPlacement = cardPlacement;
     }
 
-    /**
-     * This method removes a card from current zone based on {@code cardPlacement} attribute
-     * call this method every time you move card from somewhere to somewhere.
-     *
-     * CAUTION:
-     * If you call this method and do not move the card, the card will disappear!
-     */
-    private void removeCardFromPreviousZone() {
-        //SIDEBOARD, LIBRARY, HAND, STACK, BATTLEFIELD, GRAVEYARD, EXILE, COMMAND_ZONE;
-        switch(getCardPlacement()) {
-            case SIDEBOARD:
-                // TODO:
-                // remove from its owners sideboard
-                // I don't thing this case will happen at any point
-                throw new RuntimeException("For some fuckin' sake we had to remove card from sideboard!");
-            case LIBRARY:
-                if(!getOwner().getLibrary().removeCard(this)) {
-                    throw new RuntimeException("Tried to move card from library but Card is not in the library.");
-                }
-                break;
-            case HAND:
-                if(!getOwner().getHand().remove(this)) {
-                    throw new RuntimeException("Tried to move card from hand but Card is not in hand.");
-                }
-                break;
-            case STACK:
-                // not required here, cards are removed from stack automatically, or by ability effects
-                break;
-            case BATTLEFIELD:
-                if(!getController().getGameAssigned().getBattlefield().remove(this)) {
-                    throw new RuntimeException("Tried to move card from battlefield but Card is not on battlefield.");
-                }
-                break;
-            case GRAVEYARD:
-                if(!getOwner().getGraveyard().remove(this)) {
-                    throw new RuntimeException("Tried to move card from graveyard but Card is not in graveyard.");
-                }
-                break;
-            case EXILE:
-                if(!getController().getGameAssigned().getExile().remove(this)) {
-                    throw new RuntimeException("Tried to move card from exile but Card is not in exile.");
-                }
-                break;
-            case COMMAND_ZONE:
-                if(!getController().getGameAssigned().getCommandZone().remove(this)) {
-                    throw new RuntimeException("Tried to move card from command zone but Card is not there.");
-                }
-                break;
-            default:
-                // If we got here, then the card was not in a known game zone, or some other error --> throw Runtime
-                throw new RuntimeException("Zone previously containing Card not recognized!");
-        }
+    @NotNull
+    @Override
+    public CardPlacement getCardPlacement() {
+        return this.cardPlacement;
     }
 
+
     @Override
-    public void defaultPutCounters(CounterType cType, int amount) throws NegativeNotAllowedException {
-        counters.get(cType).addAmount(amount);
+    public void defaultPutCounters(CounterType cType, int amount) {
+        if(counters.containsKey(cType)) {
+            try {
+                counters.get(cType).changeAmount(amount);
+            } catch(NegativeNotAllowedException|RestrictedCounterAmountException e) {
+                throw new RuntimeException("It crashed somehow on putting a counter.", e);
+            }
+        } else {
+            counters.put(cType, new Counter(amount, cType));
+        }
     }
     @Override
-    public void defaultRemoveCounters(CounterType cType, int amount) throws RestrictedCounterAmountException, NegativeNotAllowedException {
-        counters.get(cType).removeAmount(amount);
+    public void defaultRemoveCounters(CounterType cType, int amount) throws RestrictedCounterAmountException {
+        if(counters.containsKey(cType)) {
+
+            if(counters.get(cType).getAmount() - amount == 0) {
+                counters.remove(cType);
+                return;
+            }
+            counters.get(cType).changeAmount(-amount);
+        } else {
+            throw new InvalidActionException("No such counters: " + cType);
+        }
+
     }
     @Override
     public int getCounterAmount(CounterType cType) {
@@ -182,61 +164,20 @@ public abstract class AbstractCard implements Card {
     /**
      * Card is cleared of counters, sickness, tap/flip values, power, toughness, etc.
      * Generally the card becomes inactive and loses all abilities
-     * use thgis when you destroy card or exile it
+     * use thgis when you destroy card or defaultExile it
      */
-    protected void clear() {
+    @Override
+    public void clear() {
         this.facedDown = false;
         this.tapped = false;
         this.counters.clear();
     }
 
-    @Override
-    public void shuffleIntoLibrary() {
-        putOnTopOfLibrary(); // puts Card on top of library, clears card and removes it from previous zone
-        getOwner().getLibrary().shuffle(); // the method says SHUFFLE into... so
-    }
 
-    @Override
-    public void putOnTopOfLibrary() {
-        clear(); // card loses abilities and counters
-        removeCardFromPreviousZone(); // remove the card from previous zone
-        getOwner().getLibrary().putCardOnTop(this); // put the card to the new zone
-        setCardPlacement(CardPlacement.LIBRARY); // keep track of where the card is
-    }
 
-    @Override
-    public void putOnBottomOfLibrary() {
-        clear(); // card loses abilities and counters
-        removeCardFromPreviousZone(); // remove the card from previous zone
-        getOwner().getLibrary().putCardOnBottom(this); // put the card to the new zone
-        setCardPlacement(CardPlacement.LIBRARY); // keep track of where the card is
-    }
 
-    @Override
-    public void exile() {
-        // By default, all cards are exiled face-up, rule 406.3
-        clear(); // card loses abilities and counters
-        removeCardFromPreviousZone(); // remove the card from previous zone
-        getController().getGameAssigned().getExile().add(this); // put the card to the new zone
-        setCardPlacement(CardPlacement.EXILE); // keep track of where the card is
-    }
 
-    @Override
-    public void defaultDestroy() throws IndestructibleException {
-        // check if card is not indestructible
-        for(Ability ability : getAbilities()) {
-            if(ability instanceof AffectsDestroying) {
-                // call the alternative destroy() method provided by the ability
-                ((AffectsDestroying)ability).destroy();
-            }
-        }
 
-        clear(); // card loses abilities and counters
-        removeCardFromPreviousZone(); // remove the card from previous zone
-        getOwner().getGraveyard().push(this);
-        setCardPlacement(CardPlacement.GRAVEYARD);
-        System.out.println("Destroyed...");
-    }
 
     /**
      * This method is used in the toString() methods of AbstractCard subclasses to reduce redundancy

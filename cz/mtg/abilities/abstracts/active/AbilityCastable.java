@@ -1,15 +1,16 @@
-package cz.mtg.abilities;
+package cz.mtg.abilities.abstracts.active;
 
+import cz.mtg.abilities.abstracts.Ability;
 import cz.mtg.cards.Card;
 import cz.mtg.game.mana.ManaPool;
-import cz.mtg.game.Stackable;
+import cz.mtg.game.Castable;
 
 /**
  * This class contains one ability, that can be activated. Its effects, conditions and everything
  * I forgot what the implementation should be about, so ...
  * i will come back to this later, I have to time now
  */
-public abstract class AbilityStackable extends Ability implements Stackable {
+public abstract class AbilityCastable extends Ability implements Castable {
 
     private final ManaPool cost;
 
@@ -23,16 +24,16 @@ public abstract class AbilityStackable extends Ability implements Stackable {
      * @param source source card containing this ability instance
      * @param cost how much it costs to activate this ability
      */
-    public AbilityStackable(String keyWord, String effectDescription, Card source, ManaPool cost) {
+    public AbilityCastable(String keyWord, String effectDescription, Card source, ManaPool cost) {
         super(keyWord, effectDescription, source);
         this.cost = cost;
     }
 
     /**
      * I will not repeat myself...
-     * @see AbilityStackable#AbilityStackable(String, String, Card, ManaPool)
+     * @see AbilityCastable#AbilityCastable(String, String, Card, ManaPool)
      */
-    public AbilityStackable(String effectDescription, Card source, ManaPool cost) {
+    public AbilityCastable(String effectDescription, Card source, ManaPool cost) {
         super(effectDescription, source);
         this.cost = cost;
     }

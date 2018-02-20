@@ -3,7 +3,7 @@ package cz.mtg.exceptions;
 /**
  * Throw this when working with counters and someomne attempts to decrease value of counters below zero
  */
-public class RestrictedCounterAmountException extends Exception {
+public class RestrictedCounterAmountException extends RuntimeException {
     private static final String defaultMessage = "Counters can't reach negative values!";
     /**
      * Propagates custom message to the exception

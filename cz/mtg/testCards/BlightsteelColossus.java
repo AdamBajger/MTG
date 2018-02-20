@@ -2,16 +2,15 @@ package cz.mtg.testCards;
 
 import cz.mtg.abilities.IndestructibleAbility;
 import cz.mtg.abilities.InfectAbility;
+import cz.mtg.cards.Card;
 import cz.mtg.cards.castable.Artifact;
 import cz.mtg.cards.castable.creature.AbstractCreatureCard;
 import cz.mtg.game.Color;
-import cz.mtg.game.mana.BasicMana;
-import cz.mtg.game.mana.Mana;
 import cz.mtg.game.Player;
+import cz.mtg.game.mana.BasicMana;
 import cz.mtg.game.mana.ManaSet;
 
 import java.util.Collections;
-import java.util.HashSet;
 
 /**
  * Blightsteel Colossus

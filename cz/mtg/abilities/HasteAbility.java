@@ -1,7 +1,8 @@
 package cz.mtg.abilities;
 
 
-import cz.mtg.abilities.interfaces.passive.AffectsSummoningSickness;
+import cz.mtg.abilities.abstracts.passive.AbilityPassive;
+import cz.mtg.abilities.abstracts.passive.AffectsSummoningSickness;
 import cz.mtg.cards.Card;
 
 /**

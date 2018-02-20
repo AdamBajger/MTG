@@ -1,7 +1,12 @@
 package cz.mtg.cards.castable.creature;
 
+import cz.mtg.abilities.abstracts.Ability;
+import cz.mtg.abilities.abstracts.passive.AffectsBlockingOf;
 import cz.mtg.cards.castable.CastableCard;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
+import cz.mtg.exceptions.InvalidActionException;
+import cz.mtg.exceptions.InvalidTargetException;
+import cz.mtg.exceptions.ProtectionFromSourceException;
 import cz.mtg.game.Player;
 import cz.mtg.game.targets.DamageableTarget;
 
@@ -75,6 +80,8 @@ public interface Creature extends CastableCard, DamageableTarget {
         return defaultHasSummoningSickness();
     }
 
+
+
     /**
      * Trie to add creature to attacking creature group
      * not developed yet...
@@ -104,14 +111,34 @@ public interface Creature extends CastableCard, DamageableTarget {
     }
 
     /**
+     * This method is used to declare this creature as blocking
+     * TODO: check for block validity --> canBeTargetOfSource()
+     * TODO: complete class
+     * @param creature creature to be blocked
+     */
+    default void block(Creature creature) throws InvalidTargetException {
+        if(!creature.canBeTargetOfSource(this)) {
+            throw new InvalidTargetException("This creature cannot be blocked with this creature!", creature, this);
+        }
+        for (Ability a : creature.getAbilities()) {
+            if (a instanceof AffectsBlockingOf) {
+                if (!((AffectsBlockingOf) a).canBeBlockedBy(this)) {
+                    throw new InvalidTargetException("This creature cannot be blocked with this creature!", creature, this);
+                }
+            }
+        }
+        //todo: assign for blocking
+    }
+
+    /**
      * Default method to deal damage
      * This method actually deals damage to a TARGET from this creature
      * For example when Creature attacks and gets blocked, each of these creatures use this method
      * to deal damage to each other
      *
      */
-    default void dealDamage(DamageableTarget target) {
-        target.takeDamage(getActualPower());
+    default void dealDamage(DamageableTarget target) throws ProtectionFromSourceException {
+        target.takeDamage(getActualPower(), this);
     }
 
     /**

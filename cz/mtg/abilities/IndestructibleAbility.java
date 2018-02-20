@@ -1,6 +1,7 @@
 package cz.mtg.abilities;
 
-import cz.mtg.abilities.interfaces.passive.AffectsDestroying;
+import cz.mtg.abilities.abstracts.passive.AbilityPassive;
+import cz.mtg.abilities.abstracts.passive.AffectsDestroying;
 import cz.mtg.cards.Card;
 import cz.mtg.exceptions.IndestructibleException;
 
@@ -11,6 +12,6 @@ public class IndestructibleAbility extends AbilityPassive implements AffectsDest
     }
     @Override
     public void destroy() throws IndestructibleException {
-        throw new IndestructibleException(this.getSource());
+        throw new IndestructibleException(this);
     }
 }

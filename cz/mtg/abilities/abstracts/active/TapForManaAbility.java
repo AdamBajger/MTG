@@ -1,5 +1,6 @@
-package cz.mtg.abilities;
+package cz.mtg.abilities.abstracts.active;
 
+import cz.mtg.abilities.abstracts.Ability;
 import cz.mtg.cards.Card;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.InsufficientManaException;
@@ -11,7 +12,7 @@ import cz.mtg.game.mana.ManaSet;
  * Also abilities of creatures and artifacts that generate mana are involved here
  * Every permanent card that gives you mana by tapping has this ability
  */
-public class TapForManaAbility extends Ability implements ConsumesMana {
+public abstract class TapForManaAbility extends Ability implements ConsumesMana {
     private ManaSet cost;
     private ManaSet manaGenerated;
 
@@ -30,6 +31,7 @@ public class TapForManaAbility extends Ability implements ConsumesMana {
         return cost;
     }
 
+
     /**
      * This just checks whether the player has enough mana to use this ability
      * and then spends mana cost and then adds the mana to the mana pool
@@ -37,11 +39,11 @@ public class TapForManaAbility extends Ability implements ConsumesMana {
      * No one can respond to this action, this action thus cannot be countered
      */
     public void tapForMana() throws AlreadyTappedOrUntappedException, InsufficientManaException {
-        if(getSource().getController().notEnoughMana(this)) throw new InsufficientManaException("Not enough Mana");
-        getSource().tap();
-        getSource().getController().spendMana(cost, this);
+        if(getSourceCard().getController().notEnoughMana(this)) throw new InsufficientManaException("Not enough Mana");
+        getSourceCard().tap();
+        getSourceCard().getController().spendMana(cost, this);
         System.out.println();
-        getSource().getController().addAllMana(manaGenerated);
+        getSourceCard().getController().addAllMana(manaGenerated);
     }
 
 

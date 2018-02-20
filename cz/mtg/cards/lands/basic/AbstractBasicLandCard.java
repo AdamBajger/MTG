@@ -1,16 +1,12 @@
 package cz.mtg.cards.lands.basic;
 
-import cz.mtg.abilities.TapForManaAbility;
+import cz.mtg.abilities.BasicTapForManaAbility;
+import cz.mtg.cards.Card;
 import cz.mtg.cards.lands.AbstractLandCard;
 import cz.mtg.game.Color;
 import cz.mtg.game.Player;
-import cz.mtg.game.mana.BasicMana;
-import cz.mtg.game.mana.Mana;
 import cz.mtg.game.mana.ManaSet;
 import cz.mtg.game.mana.RepresentativeMana;
-
-import java.util.Collections;
-import java.util.HashSet;
 
 /**
  * This represents a basic land card
@@ -28,7 +24,7 @@ public abstract class AbstractBasicLandCard extends AbstractLandCard {
         ManaSet cost = new ManaSet();
         ManaSet generated = new ManaSet();
         generated.add(new RepresentativeMana(manaColor, 1));
-        addAbility(new TapForManaAbility(this, cost, generated));
+        addAbility(new BasicTapForManaAbility(this, cost, generated));
     }
 
 

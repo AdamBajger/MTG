@@ -1,8 +1,10 @@
-package cz.mtg.game;
+package cz.mtg.game.zones;
 
 import cz.mtg.cards.Card;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -22,14 +24,14 @@ public class Deck {
     // sideboard cards
     private Set<Card> sideboard;
 
-    public Deck(/*Player owner,*/ Set<Card> mainDeck, Set<Card> sideboard) {
+    public Deck(/*Player owner,*/ @NotNull Set<Card> mainDeck, @NotNull Set<Card> sideboard) {
         //this.owner = owner;
         this.mainDeck = mainDeck;
         this.sideboard = sideboard;
     }
 
     public Set<Card> getMainDeck() {
-        return mainDeck;
+        return Collections.unmodifiableSet(mainDeck);
     }
 
     public boolean addCardToMainDeck(Card card) {
@@ -51,7 +53,7 @@ public class Deck {
     }
 
     public Set<Card> getSideboard() {
-        return sideboard;
+        return Collections.unmodifiableSet(sideboard);
     }
 
     public boolean addCardToSideboard(Card card) {

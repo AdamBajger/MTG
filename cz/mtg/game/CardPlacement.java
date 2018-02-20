@@ -5,5 +5,5 @@ package cz.mtg.game;
  * You can move a card to all of these locations under some circumstances
  */
 public enum CardPlacement {
-    SIDEBOARD, LIBRARY, HAND, STACK, BATTLEFIELD, GRAVEYARD, EXILE, COMMAND_ZONE
+    SIDEBOARD, LIBRARY, HAND, STACK, BATTLEFIELD, GRAVEYARD, EXILE, COMMAND_ZONE, INIT
 }

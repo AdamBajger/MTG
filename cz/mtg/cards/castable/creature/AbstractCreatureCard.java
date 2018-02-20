@@ -1,7 +1,8 @@
 package cz.mtg.cards.castable.creature;
 
-import cz.mtg.abilities.Ability;
-import cz.mtg.abilities.interfaces.passive.AffectsCreatureToughness;
+import cz.mtg.abilities.abstracts.Ability;
+import cz.mtg.abilities.abstracts.passive.AffectsCreatureToughness;
+import cz.mtg.cards.Card;
 import cz.mtg.cards.castable.AbstractCastableCard;
 import cz.mtg.game.*;
 import cz.mtg.game.mana.ManaSet;

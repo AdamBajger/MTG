@@ -7,7 +7,7 @@ import cz.mtg.game.targets.AttackableTarget;
 
 public interface Planeswalker extends AttackableTarget, CastableCard {
     @Override
-    default void takeDamage(int damage) {
+    default void defaultTakeDamage(int damage) {
         if (damage < 0) throw new NegativeNotAllowedException("Damage taken MUST be positive value!");
         try {
             removeCounters(CounterType.LOYALTY, damage);

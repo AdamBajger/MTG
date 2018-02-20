@@ -1,4 +1,4 @@
-package cz.mtg.abilities.interfaces.passive;
+package cz.mtg.abilities.abstracts.passive;
 
 
 /**

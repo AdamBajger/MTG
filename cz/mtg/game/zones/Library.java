@@ -2,7 +2,7 @@ package cz.mtg.game.zones;
 
 import cz.mtg.cards.Card;
 import cz.mtg.exceptions.EmptyDeckException;
-import cz.mtg.game.Deck;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ import java.util.*;
  *
  *
  */
-public class Library {
+public class Library implements Iterable<Card> {
     private final LinkedList<Card> cards = new LinkedList<>();
 
     /**
@@ -33,7 +33,10 @@ public class Library {
     public void initializeLibrary(Deck deck) throws EmptyDeckException {
         Collection<Card> mainDeck = deck.getMainDeck();
         if(mainDeck == null || mainDeck.size() == 0) throw new EmptyDeckException(deck);
-        cards.addAll(deck.getMainDeck());
+        //this will properly add all cards to a player's library
+        for (Card card : mainDeck) {
+            putCardOnTop(card);
+        }
         shuffle();
     }
 
@@ -42,6 +45,29 @@ public class Library {
      */
     public void shuffle() {
         Collections.shuffle(cards);
+    }
+
+    /**
+     * Searches for a card by its name
+     * @param name name of the card
+     * @return the card
+     */
+    public Card searchForACard(String name) {
+        for(Card c : cards) {
+            if(c.getName().equals(name)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Searches for the same card as the card inputted
+     * @param card compared card
+     * @return the card we are searching for
+     */
+    public Card searchForACard(Card card) {
+        return searchForACard(card.getName());
     }
 
     /**
@@ -67,8 +93,8 @@ public class Library {
      * @return taken Card
      * @throws NoSuchElementException When the library is empty
      */
-    public Card takeTopCard() throws NoSuchElementException {
-        return cards.pop();
+    public Card lookAtTopCard() throws NoSuchElementException {
+        return cards.get(0);
     }
 
     /**
@@ -79,19 +105,38 @@ public class Library {
      * @param n the number of cards to be taken from top
      * @return linked list of taken cards
      */
-    public LinkedList<Card> takeTopNCards(int n) {
+    public LinkedList<Card> lookAtTopNCards(int n) {
         LinkedList<Card> topCards = new LinkedList<>();
-        //if(cards.size() == 0) throw new NoSuchElementException();
+        if(cards.size() < n) {
+            n = cards.size();
+        }
+
         for(int i = 0; i < n; i++) {
-            try {
-                topCards.addLast(cards.pop());
-            } catch(NoSuchElementException e) {
-                // nothing to do here
-                // according to rules, if you are instructed to take some cards from library
-                // and you have no library already, you just do nothing
-            }
+            topCards.addLast(cards.get(i));
         }
         return topCards;
+    }
+
+    /**
+     * returns the bottom card of library
+     * @return the bottom card
+     */
+    public Card lookAtBottomCard() {
+        return cards.getLast();
+    }
+
+    /**
+     * returns the bottom N cards of the player's library
+     * @param n the number of cards returned
+     * @return the cards
+     */
+    public LinkedList<Card> lookAtBottomNCards(int n) {
+        LinkedList<Card> result = new LinkedList<>();
+        int numberOfCards = cards.size();
+        for(int i = numberOfCards-1; i > (numberOfCards - (n + 1)); i--) {
+            result.addFirst(cards.get(i));
+        }
+        return result;
     }
 
     /**
@@ -117,5 +162,16 @@ public class Library {
 
     public int getNumberOfCards() {
         return cards.size();
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @NotNull
+    @Override
+    public Iterator<Card> iterator() {
+        return cards.iterator();
     }
 }

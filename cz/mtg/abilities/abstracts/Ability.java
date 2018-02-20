@@ -1,42 +1,53 @@
-package cz.mtg.abilities;
+package cz.mtg.abilities.abstracts;
 
+import cz.mtg.game.Source;
 import cz.mtg.cards.Card;
+import cz.mtg.game.Player;
 
 import java.util.Objects;
 
-public abstract class Ability {
+public abstract class Ability implements Source {
     private final String keyWord;
     private final String effectDescription;
-    private final Card source; // this is the card to which this ability is sticked to
+    private final Card sourceCard; // this is the card to which this ability is sticked to
 
     /**
-     * Creates a new ability with a source card assigned, keyWord defined and effect description described.
+     * Creates a new ability with a sourceCard card assigned, keyWord defined and effect description described.
      * Name is not required argument, because some abilities DO NOT have their own keyword (like haste, vigilance, etc.)
      * ---> the keyWord can be empty
      * @param keyWord Keyword for particular ability
      * @param effectDescription Description of what this ability does.
-     * @param source source Card containing this ability instance
+     * @param sourceCard sourceCard Card containing this ability instance
      */
-    public Ability(String keyWord, String effectDescription, Card source) {
+    public Ability(String keyWord, String effectDescription, Card sourceCard) {
         this.keyWord = keyWord;
         this.effectDescription = effectDescription;
-        this.source = source;
+        this.sourceCard = sourceCard;
     }
 
     /**
      * This is overloaded constructor omitting ability's keyWord
      * @see this#Ability(String, String, Card) original constructor
      */
-    public Ability(String effectDescription, Card source) {
-        this("", effectDescription, source);
+    public Ability(String effectDescription, Card sourceCard) {
+        this("", effectDescription, sourceCard);
+    }
+
+    public Card getSourceCard() {
+        return sourceCard;
+    }
+
+    @Override
+    public String getName() {
+        return getTextRepresentation();
     }
 
     /**
-     * Returns the source card of this ability
+     * Returns the sourceCard card of this ability
      * @return The Card that contains this ability
      */
-    public Card getSource() {
-        return source;
+    public Player getController() {
+        return sourceCard.getController();
     }
 
     public String getEffectDescription() {
@@ -69,7 +80,7 @@ public abstract class Ability {
         return "Ability: {" +
                 "keyWord: '" + keyWord + '\'' +
                 ", effectDescription: '" + effectDescription + '\'' +
-                ", source: " + source +
+                ", sourceCard: " + sourceCard +
                 '}';
     }
 }

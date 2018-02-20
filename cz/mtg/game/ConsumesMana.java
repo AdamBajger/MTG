@@ -1,20 +1,15 @@
 package cz.mtg.game;
 
-import cz.mtg.cards.Card;
+import cz.mtg.exceptions.InvalidActionException;
 import cz.mtg.game.mana.Mana;
 import cz.mtg.game.mana.ManaSet;
 
 /**
- * This interface is here to wrap around Stackable and non-Stackable abilities.
- * There are abilities, that require mana, but are not Stackable (Tap for Mana ability)
+ * This interface is here to wrap around Castable and non-Castable abilities.
+ * There are abilities, that require mana, but are not Castable (Tap for Mana ability)
  *
  */
-public interface ConsumesMana {
-    /**
-     * This method returns the source Card causing this spell to go on stack
-     * @return source Card of the spell
-     */
-    Card getSource();
+public interface ConsumesMana extends Stackable {
 
     /**
      * This method returns mana cost of this castable object
@@ -23,20 +18,20 @@ public interface ConsumesMana {
     ManaSet getManaCost();
 
     /**
-     * By default this card returns the controller of card causing this spell to go on stack
-     * Basically the caster of this spell
-     * @return Casting Player
+     * This method takes a mana object and tells you if you can spend it on this spell
+     * @param mana mana object tested
+     * @return true if mana is usable, false otherwise
      */
-    default Player getCastingPlayer() {
-        return getSource().getController();
-    }
-
     default boolean manaCanBeSpendOnThis(Mana mana) {
         return true;
     }
 
-
-
+    /**
+     * This method will execute / satisfy the additional costs
+     * Everything that is required to cast desired card/spell will be done
+     * @throws InvalidActionException if the requirements can not be satisfied
+     */
+    default void spendAdditiondalManaCost() throws InvalidActionException {}
 
     /**
      * This method checks if additional costs can be satisfied.
@@ -48,13 +43,4 @@ public interface ConsumesMana {
     default boolean additionalCastConditionsCheck() {
         return true;
     }
-
-    /**
-     * This will return the conditions that have to be satisfied in a human readable manner
-     * For example for Harrow, it would return "As an additional cost to cast Harrow, sacrifice a land."
-     * @return Text-written conditions for casting this spell
-     */
-    String getEffectDescription();
-
-
 }

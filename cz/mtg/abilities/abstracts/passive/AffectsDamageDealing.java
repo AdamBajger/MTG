@@ -1,7 +1,7 @@
-package cz.mtg.abilities.interfaces.passive;
+package cz.mtg.abilities.abstracts.passive;
 
 
-import cz.mtg.cards.Card;
+import cz.mtg.exceptions.ProtectionFromSourceException;
 import cz.mtg.game.targets.DamageableTarget;
 
 /**
@@ -11,11 +11,11 @@ import cz.mtg.game.targets.DamageableTarget;
  *      infect, defender, wither,
  *
  */
-public interface AffectsWayOfDamaging {
+public interface AffectsDamageDealing {
     /**
      * This is the alternative damaging method, that will be used
      * whenever a creature with thgis ability will deal damage
      * @param target target to be dealt damage
      */
-    void dealDamage(DamageableTarget target);
+    void dealDamage(DamageableTarget target) throws ProtectionFromSourceException;
 }

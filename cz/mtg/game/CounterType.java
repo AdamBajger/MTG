@@ -13,6 +13,7 @@ public enum CounterType {
     P_T_COUNTER_NEGATIVE, // -1/-1 counters
     POISON,
     QUEST,
+    SPORE,
     TIME
 
 

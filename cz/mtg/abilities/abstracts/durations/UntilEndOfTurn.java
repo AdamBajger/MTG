@@ -1,4 +1,4 @@
-package cz.mtg.abilities.interfaces.durations;
+package cz.mtg.abilities.abstracts.durations;
 
 /**
  * This interface MUST be implemented by all abilities, that have effects, which last until end of turn.

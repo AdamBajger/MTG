@@ -26,11 +26,12 @@ import cz.mtg.cards.lands.Land;
  *      Sorcery card
  *      Instant card
  */
+@Deprecated
 public class ConditionChecker {
     /**
      * Tells you whether a card is or is not permanent
      * Card is a permanent only if it is a permanent card and is in play
-     * Cards in graveyards, exile, hand, library, etc... are NOT "permanents", BUT may still be "permanent cards"
+     * Cards in graveyards, defaultExile, hand, library, etc... are NOT "permanents", BUT may still be "permanent cards"
      * There is difference between "Permanents" and "Permanent cards"
      * @return True if a card is permanent, False otherwise
      */

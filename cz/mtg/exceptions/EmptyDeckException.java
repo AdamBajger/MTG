@@ -1,6 +1,6 @@
 package cz.mtg.exceptions;
 
-import cz.mtg.game.Deck;
+import cz.mtg.game.zones.Deck;
 
 public class EmptyDeckException extends Exception {
     private static final String MESSAGE = "Maindeck is empty in Deck: ";

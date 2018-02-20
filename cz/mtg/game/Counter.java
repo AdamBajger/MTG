@@ -25,7 +25,7 @@ public class Counter {
         this.counterType = counterType;
     }
 
-    private void changeAmount(int amount) throws RestrictedCounterAmountException {
+    public void changeAmount(int amount) throws RestrictedCounterAmountException {
         if(amount == 0) {
             // well, there is no reason to do anything, if you want to add nothing
             return;
@@ -34,6 +34,8 @@ public class Counter {
             throw new RestrictedCounterAmountException(
                     "Tried to change counters from " + this.amount + " to "+ (this.amount + amount) + "!");
         }
+        // If everything is fine, change the value
+        this.amount += amount;
     }
 
     private void checkNotNegative(int amount) throws NegativeNotAllowedException {
@@ -46,7 +48,10 @@ public class Counter {
      * Increases the value of this counter by given amount
      * @param amount given amount
      * @throws NegativeNotAllowedException whenever a negative number is inputted, exception is thrown
+     *
+     * use the changeAmount() method
      */
+    @Deprecated
     public void addAmount(int amount) throws NegativeNotAllowedException {
         checkNotNegative(amount);
         try {
@@ -58,6 +63,14 @@ public class Counter {
         }
     }
 
+    /**
+     *
+     * @param amount no reason
+     * @throws RestrictedCounterAmountException no reason
+     * @throws NegativeNotAllowedException no reason
+     * use the changeAmount() method
+     */
+    @Deprecated
     public void removeAmount(int amount) throws RestrictedCounterAmountException, NegativeNotAllowedException {
         checkNotNegative(amount);
         changeAmount(-amount);

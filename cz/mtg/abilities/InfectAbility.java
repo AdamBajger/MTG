@@ -1,9 +1,11 @@
 package cz.mtg.abilities;
 
-import cz.mtg.abilities.interfaces.passive.AffectsWayOfDamaging;
+import cz.mtg.abilities.abstracts.passive.AbilityPassive;
+import cz.mtg.abilities.abstracts.passive.AffectsDamageDealing;
 import cz.mtg.cards.Card;
 import cz.mtg.cards.castable.Planeswalker;
 import cz.mtg.cards.castable.creature.Creature;
+import cz.mtg.exceptions.ProtectionFromSourceException;
 import cz.mtg.game.CounterType;
 import cz.mtg.game.Player;
 import cz.mtg.game.targets.DamageableTarget;
@@ -17,7 +19,7 @@ import cz.mtg.game.targets.DamageableTarget;
  *      We haven't even implemented attack/damage system, so it is too soon to implement this
  *      But remember, that this i
  */
-public class InfectAbility extends AbilityPassive implements AffectsWayOfDamaging {
+public class InfectAbility extends AbilityPassive implements AffectsDamageDealing {
 
     public InfectAbility(Card source) {
         super("infect", "This creature deals damage to creatures in the form of -1/-1 counters" +
@@ -25,15 +27,17 @@ public class InfectAbility extends AbilityPassive implements AffectsWayOfDamagin
     }
 
     @Override
-    public void dealDamage(DamageableTarget target) {
+    public void dealDamage(DamageableTarget target) throws ProtectionFromSourceException {
+
         if(target instanceof Player) {
+
             // give poison counters to Player
-            ((Player)target).changeCounterAmountByValue(CounterType.POISON, ((Creature)getSource()).getActualPower());
+            ((Player)target).changeCounterAmountByValue(CounterType.POISON, ((Creature) getSourceCard()).getActualPower());
         } else if(target instanceof Creature) {
             // put -1/-1 counters to creatures
-            ((Creature)target).putCounters(CounterType.P_T_COUNTER_NEGATIVE, ((Creature)getSource()).getActualPower());
+            ((Creature)target).putCounters(CounterType.P_T_COUNTER_NEGATIVE, ((Creature) getSourceCard()).getActualPower());
         } else if(target instanceof Planeswalker) {
-            target.takeDamage(((Creature)getSource()).getActualPower());
+            target.takeDamage(((Creature) getSourceCard()).getActualPower(), getSourceCard());
 
         }
     }

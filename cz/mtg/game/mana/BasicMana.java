@@ -29,7 +29,7 @@ public class BasicMana extends Mana implements Cloneable {
     }
 
     /**
-     * Checks if this mana can be spend on any Stackable spell (i. e. attribute spendableOn = Stackable.class)
+     * Checks if this mana can be spend on any Castable spell (i. e. attribute spendableOn = Castable.class)
      * If not, it checks whether the castSpell is instance of the class this mana is supposed to be spent on
      * and if it IS, it returns true, if it is NOT, it returns false.
      *

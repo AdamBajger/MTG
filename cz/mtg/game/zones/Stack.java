@@ -1,9 +1,9 @@
-package cz.mtg.game;
+package cz.mtg.game.zones;
 
 import cz.mtg.exceptions.NotOnStackException;
+import cz.mtg.game.Stackable;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * this class implements spell stack
@@ -28,7 +28,7 @@ public class Stack {
 
     /**
      * Appends a Stackable object to the spell queue
-     * @param stackable Castable card, ability or other castable object
+     * @param stackable Stackable card, ability or other stackable object
      */
     public void put(Stackable stackable) {
         spellQueue.push(stackable);
@@ -36,7 +36,7 @@ public class Stack {
 
     /**
      * Removes spell from the stack
-     * @param stackable any stackable object (castable card or ability)
+     * @param stackable any stackable object (stackable card or ability)
      * @throws NotOnStackException If the spell is not on stack.
      */
     public void remove(Stackable stackable) throws NotOnStackException {
