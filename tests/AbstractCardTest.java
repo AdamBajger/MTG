@@ -277,6 +277,7 @@ class AbstractCardTest {
     void exile() {
         Card cardToExile = new BlightsteelColossus(tester);
         tester.exileCard(cardToExile);
+        //TODO
     }
 
     @Test
