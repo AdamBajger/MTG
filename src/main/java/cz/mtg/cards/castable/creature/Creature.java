@@ -2,6 +2,7 @@ package cz.mtg.cards.castable.creature;
 
 import cz.mtg.abilities.abstracts.Ability;
 import cz.mtg.abilities.abstracts.passive.AffectsBlockingOf;
+import cz.mtg.cards.Permanent;
 import cz.mtg.cards.castable.CastableCard;
 import cz.mtg.exceptions.AlreadyTappedOrUntappedException;
 import cz.mtg.exceptions.InvalidActionException;
@@ -17,7 +18,7 @@ import cz.mtg.game.targets.DamageableTarget;
  *      Complete attack() method
  *      ---> develop attack mechanics
  */
-public interface Creature extends CastableCard, DamageableTarget {
+public interface Creature extends CastableCard, DamageableTarget, Permanent {
 
 
 

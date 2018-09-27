@@ -1,6 +1,7 @@
 package cz.mtg.cards.lands;
 
 import cz.mtg.cards.Card;
+import cz.mtg.cards.Permanent;
 import cz.mtg.game.Color;
 
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
  *      Generally the Land card does NOT give you mana, only specific land types have this ability
  *      "tap for mana" should be implemented as a regular ability, so we can have lands, that does not give mana
  */
-public interface Land extends Card {
+public interface Land extends Card, Permanent {
 
     /**
      * According to rules, land card has no color nor mana cost.

@@ -1,6 +1,7 @@
 package cz.mtg.cards;
 
 
+
 import cz.mtg.game.Source;
 import cz.mtg.abilities.abstracts.Ability;
 import cz.mtg.abilities.abstracts.passive.AffectsTargeting;
